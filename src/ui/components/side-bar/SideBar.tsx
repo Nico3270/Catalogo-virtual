@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -11,118 +13,113 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import AutoAwesomeMotionRoundedIcon from "@mui/icons-material/AutoAwesomeMotionRounded";
-import ControlPointRoundedIcon from "@mui/icons-material/ControlPointRounded";
-import MopedRoundedIcon from "@mui/icons-material/MopedRounded";
-import DiningRoundedIcon from "@mui/icons-material/DiningRounded";
-import FlatwareRoundedIcon from "@mui/icons-material/FlatwareRounded";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import LocalGroceryStoreRoundedIcon from "@mui/icons-material/LocalGroceryStoreRounded";
-import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
-import FlatwareIcon from "@mui/icons-material/Flatware";
+import { FaMoneyBillTransfer } from "react-icons/fa6";
+import { FaBookmark, FaBookOpen, FaPhotoVideo, FaUserEdit } from "react-icons/fa";
+import { IoMdPhotos } from "react-icons/io";
+import { IoDocument } from "react-icons/io5";
+import { SiReadthedocs } from "react-icons/si";
+import { AiFillProduct } from "react-icons/ai";
+import LoginRoundedIcon from "@mui/icons-material/LoginRounded";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 interface SideBarProps {
-    open: boolean;
-    toggleDrawer: (open: boolean) => void;
-    role: "admin" | "user" | "server" | "kitchen" | "delivery";
+  open: boolean;
+  toggleDrawer: (open: boolean) => void;
 }
 
 // Configuración del menú para cada rol
 const menuConfig: Record<
-    SideBarProps["role"],
-    {
-        name: string;
-        link?: string;
-        onClick?: () => void;
-        icon: React.JSX.Element;
-    }[]
+  "admin" | "user",
+  {
+    name: string;
+    link?: string;
+    onClick?: () => void;
+    icon: React.JSX.Element;
+  }[]
 > = {
-    admin: [
-        { name: "Perfil", link: "/profile", icon: <PeopleIcon /> },
-        { name: "Productos", link: "/products", icon: <MenuBookRoundedIcon /> },
-        {
-            name: "Órdenes",
-            link: "/dashboard/orders",
-            icon: <AutoAwesomeMotionRoundedIcon />,
-        },
-        { name: "Cocina - Ordenes", link: "/kitchen/orders", icon: <DiningRoundedIcon /> },
-        { name: "Cocina - Productos", link: "/kitchen/products", icon: <FlatwareIcon /> },
-        { name: "Cocina - Resumen ", link: "/kitchen/resume", icon: <ContentPasteSearchIcon /> },
-        { name: "Personal", link: "/server", icon: <FlatwareRoundedIcon /> },
-        { name: "Domicilio", link: "/delivery", icon: <MopedRoundedIcon /> },
-        { name: "Extras", link: "/extras", icon: <ControlPointRoundedIcon /> },
-        { name: "Dashboard", link: "/dashboard", icon: <DashboardIcon /> },
-    ],
-    user: [
-        { name: "Perfil", link: "/profile", icon: <PeopleIcon /> },
-        {
-            name: "Órdenes",
-            link: "/orders",
-            icon: <AutoAwesomeMotionRoundedIcon />,
-        },
-        {
-            name: "Carro de compras",
-            link: "/cart",
-            icon: <LocalGroceryStoreRoundedIcon />,
-        },
-        { name: "Favoritos", link: "/favorites", icon: <FavoriteRoundedIcon /> },
-    ],
-    server: [
-        { name: "Perfil", link: "/profile", icon: <PeopleIcon /> },
-        { name: "Personal", link: "/server", icon: <FlatwareRoundedIcon /> },
-        {
-            name: "Órdenes",
-            link: "/orders",
-            icon: <AutoAwesomeMotionRoundedIcon />,
-        },
-    ],
-    kitchen: [
-        { name: "Perfil", link: "/profile", icon: <PeopleIcon /> },
-        { name: "Cocina - Ordenes", link: "/kitchen/orders", icon: <DiningRoundedIcon /> },
-        { name: "Cocina - Productos", link: "/kitchen/products", icon: <FlatwareIcon /> },
-        { name: "Cocina - Resumen ", link: "/kitchen/resume", icon: <ContentPasteSearchIcon /> },
-    ],
-    delivery: [
-        { name: "Perfil", link: "/profile", icon: <PeopleIcon /> },
-        { name: "Domicilio", link: "/delivery", icon: <MopedRoundedIcon /> },
-        {
-            name: "Órdenes",
-            link: "/orders",
-            icon: <AutoAwesomeMotionRoundedIcon />,
-        },
-        { name: "Salir", onClick: () => console.log("Salida"), icon: <ExitToAppIcon /> },
-    ],
+  admin: [
+    { name: "Perfil", link: "/profile", icon: <PeopleIcon /> },
+    { name: "Productos", link: "/productos", icon: <MenuBookRoundedIcon /> },
+    { name: "Órdenes", link: "/dashboard/orders", icon: <AutoAwesomeMotionRoundedIcon /> },
+    { name: "Dashboard", link: "/dashboard", icon: <DashboardIcon /> },
+    { name: "Secciones", link: "/dashboard/sections", icon: <FaBookOpen /> },
+    { name: "Blogs", link: "/dashboard/blog", icon: <SiReadthedocs /> },
+    { name: "Nuevo Blog", link: "/dashboard/blog/newBlog", icon: <IoDocument /> },
+    { name: "Nueva sección", link: "/dashboard/newSection", icon: <FaBookmark /> },
+    { name: "Galería de imágenes", link: "/dashboard/galleryImages", icon: <IoMdPhotos /> },
+    { name: "Galería de videos", link: "/dashboard/galleryVideos", icon: <FaPhotoVideo /> },
+    { name: "Transacciones", link: "/dashboard/transacciones", icon: <FaMoneyBillTransfer /> },
+    { name: "Usuarios", link: "/dashboard/users", icon: <FaUserEdit /> },
+
+  ],
+  user: [
+    // { name: "Perfil", link: "/profile", icon: <PeopleIcon /> },
+    { name: "Productos", link: "/productos", icon: <AiFillProduct /> },
+    { name: "Órdenes", link: "/orders", icon: <AutoAwesomeMotionRoundedIcon /> },
+    { name: "Carro de compras", link: "/carro", icon: <LocalGroceryStoreRoundedIcon /> },
+    { name: "Favoritos", link: "/favoritos", icon: <FavoriteRoundedIcon /> },
+  ],
 };
 
-export const SideBar: React.FC<SideBarProps> = ({ open, toggleDrawer, role }) => {
-    const DrawerList = (
-        <Box
-            sx={{ width: 250 }}
-            role="presentation"
-            onClick={() => toggleDrawer(false)}
-        >
-            <List>
-                {/* Opciones basadas en el rol */}
-                {menuConfig[role].map((item) => (
-                    <ListItem key={item.name} disablePadding>
-                        <ListItemButton
-                            component={item.link ? "a" : "button"} // Actúa como enlace si hay un link
-                            href={item.link ? item.link : undefined} // Solo agregar href si hay un link
-                            onClick={item.onClick ? item.onClick : undefined} // Manejar onClick si existe
-                        >
-                            <ListItemIcon>{item.icon}</ListItemIcon>
-                            <ListItemText primary={item.name} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-                <Divider />
-            </List>
-        </Box>
-    );
+export const SideBar: React.FC<SideBarProps> = ({ open, toggleDrawer }) => {
+  const { data: session } = useSession();
+  const isAuthenticated = !!session?.user;
+  const role = (session?.user?.role as "admin" | "user") || "user";
 
-    return (
-        <Drawer open={open} anchor="right" onClose={() => toggleDrawer(false)}>
-            {DrawerList}
-        </Drawer>
-    );
+  const handleLogout = async () => {
+    await signOut({ redirect: false }); // Desactiva la redirección automática
+    window.location.href = "/auth/login"; // Redirige manualmente
+  };
+
+  const handleLogin = async () => {
+    await signIn();
+  };
+
+  const DrawerList = (
+    <Box sx={{ width: 250 }} role="presentation" onClick={() => toggleDrawer(false)}>
+      <List>
+        {isAuthenticated ? (
+          // Si está autenticado, mostrar opciones según el rol
+          <>
+            {menuConfig[role].map((item) => (
+              <ListItem key={item.name} disablePadding>
+                <ListItemButton
+                  component={item.link ? "a" : "button"}
+                  href={item.link ? item.link : undefined}
+                  onClick={item.onClick ? item.onClick : undefined}
+                >
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.name} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+            <Divider />
+            <ListItemButton onClick={handleLogout}>
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText primary="Cerrar sesión" />
+            </ListItemButton>
+          </>
+        ) : (
+          // Si no está autenticado, mostrar solo la opción de iniciar sesión
+          <ListItemButton onClick={handleLogin}>
+            <ListItemIcon>
+              <LoginRoundedIcon />
+            </ListItemIcon>
+            <ListItemText primary="Ingresar" />
+          </ListItemButton>
+        )}
+      </List>
+    </Box>
+  );
+
+  return (
+    <Drawer open={open} anchor="right" onClose={() => toggleDrawer(false)}>
+      {DrawerList}
+    </Drawer>
+  );
 };

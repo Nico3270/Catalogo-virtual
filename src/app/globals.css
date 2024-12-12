@@ -25,10 +25,18 @@ body {
       rgb(var(--background-start-rgb))
       )
       rgb(var(--background-end-rgb))
+}/* Estilos para ocultar la barra de desplazamiento */
+
+
+
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE y Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
-
-
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari y Opera */
+}
 @keyframes fadeIn {
   0% {opacity: 0;}
   100% {opacity: 1;}

@@ -1,7 +1,9 @@
 "use client";
 
+import { Footer } from "@/secondary/componentes/Footer";
 import { TopMenu, TopMenuMobile } from "@/ui";
 import React, { useState, useEffect } from "react";
+
 
 export default function RestaurantLayout({
   children,
@@ -24,19 +26,15 @@ export default function RestaurantLayout({
   }, []);
 
   return (
-   
-      <main className="bg-white min-h-screen">
-        {/* Renderiza TopMenu o TopMenuMobile dependiendo del tamaño de la pantalla */}
-        {isMobile ? (
-          <TopMenuMobile />
-        ) : (
-          <TopMenu totalItemsInCart={5} totalFavorites={3} />
-        )}
+    <main className="bg-white min-h-screen flex flex-col">
+      {/* Renderiza TopMenu o TopMenuMobile dependiendo del tamaño de la pantalla */}
+      {isMobile ? <TopMenuMobile /> : <TopMenu />}
 
+      {/* Contenido principal */}
+      <div className="flex-grow mt-0">{children}</div>
 
-        {/* Contenido principal */}
-        <div className="mt-0">{children}</div>
-      </main>
- 
+      {/* Footer */}
+      <Footer />
+    </main>
   );
 }
