@@ -1,61 +1,62 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { v2 as cloudinary } from "cloudinary";
 
-interface CreateProductInput {
-  nombre: string;
-  precio: number;
-  descripcion: string;
-  descripcionCorta?: string;
-  slug: string;
-  prioridad?: number;
-  status: "available" | "out_of_stock" | "discontinued";
-  tags: string[];
-  seccionIds: string[];
-  newImages: string[];
-}
+cloudinary.config(process.env.CLOUDINARY_URL || "");
 
-export async function createProduct(input: CreateProductInput) {
+export async function createProduct(formData: FormData) {
   try {
-    // Validar que las secciones existen
-    const existingSections = await prisma.section.findMany({
-      where: { id: { in: input.seccionIds } },
-      select: { id: true },
-    });
+    const nombre = formData.get("nombre") as string;
+    const precio = parseFloat(formData.get("precio") as string);
+    const descripcion = formData.get("descripcion") as string;
+    const descripcionCorta = formData.get("descripcionCorta") as string;
+    const slug = formData.get("slug") as string;
+    const prioridad = parseInt(formData.get("prioridad") as string);
+    const status = formData.get("status") as string;
+    const tags = (formData.get("tags") as string).split(",").map((tag) => tag.trim());
+    const seccionIds = formData.getAll("seccionIds") as string[];
+    const images = formData.getAll("images") as File[];
 
-    const existingSectionIds = existingSections.map((section) => section.id);
-    if (existingSectionIds.length !== input.seccionIds.length) {
-      throw new Error("Algunas secciones no existen en la base de datos.");
-    }
+    // Subir imágenes a Cloudinary
+    const uploadedImages = await Promise.all(
+      images.map(async (image) => {
+        const buffer = await image.arrayBuffer();
+        const base64Image = Buffer.from(buffer).toString("base64");
 
-    // Crear el producto sin relaciones inicialmente
+        const result = await cloudinary.uploader.upload(`data:image/png;base64,${base64Image}`);
+        return result.secure_url; // Retornar el URL seguro de la imagen subida
+      })
+    );
+
+    // Crear el producto
     const product = await prisma.product.create({
       data: {
-        nombre: input.nombre,
-        precio: input.precio,
-        descripcion: input.descripcion,
-        descripcionCorta: input.descripcionCorta,
-        slug: input.slug,
-        prioridad: input.prioridad ?? 0,
-        status: input.status,
-        tags: input.tags,
+        nombre,
+        precio,
+        descripcion,
+        descripcionCorta,
+        slug,
+        prioridad,
+        status,
+        tags,
         imagenes: {
-          create: input.newImages.map((url) => ({ url })),
+          create: uploadedImages.map((url) => ({ url })), // Relacionar imágenes con el producto
         },
       },
     });
 
-    // Conectar las relaciones con las secciones
+    // Relacionar el producto con las secciones
     await prisma.productSection.createMany({
-      data: input.seccionIds.map((sectionId) => ({
+      data: seccionIds.map((sectionId) => ({
         productId: product.id,
         sectionId,
       })),
     });
 
-    return product;
+    return { ok: true, product };
   } catch (error) {
-    console.error("Error creating product:", error);
-    throw new Error("No se pudo crear el producto. Verifica los datos enviados.");
+    console.error("Error al crear producto:", error);
+    return { ok: false, message: "Error al crear el producto." };
   }
 }

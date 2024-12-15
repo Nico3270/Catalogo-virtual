@@ -24,6 +24,7 @@ import { SiReadthedocs } from "react-icons/si";
 import { AiFillProduct } from "react-icons/ai";
 import LoginRoundedIcon from "@mui/icons-material/LoginRounded";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { MdAddBusiness, MdDashboardCustomize } from "react-icons/md";
 
 interface SideBarProps {
   open: boolean;
@@ -51,6 +52,8 @@ const menuConfig: Record<
     { name: "Nueva sección", link: "/dashboard/newSection", icon: <FaBookmark /> },
     { name: "Galería de imágenes", link: "/dashboard/galleryImages", icon: <IoMdPhotos /> },
     { name: "Galería de videos", link: "/dashboard/galleryVideos", icon: <FaPhotoVideo /> },
+    { name: "Gestionar productos", link: "/dashboard/productos", icon: <MdDashboardCustomize /> },
+    { name: "Nuevo producto", link: "/dashboard/productos/newProduct", icon: <MdAddBusiness /> },
     { name: "Transacciones", link: "/dashboard/transacciones", icon: <FaMoneyBillTransfer /> },
     { name: "Usuarios", link: "/dashboard/users", icon: <FaUserEdit /> },
 

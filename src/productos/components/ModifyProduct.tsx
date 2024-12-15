@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { modifyProduct } from "@/productos/actions/modifyProduct";
-import { deleteImage } from "@/productos/actions/deleteImage";
 import {
   Alert,
   Stack,
@@ -11,18 +10,18 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
+  IconButton,
   FormControl,
   FormLabel,
-  RadioGroup,
-  Radio,
-  IconButton,
 } from "@mui/material";
-import { AiOutlineCheckCircle } from "react-icons/ai";
 import { FaTrashAlt } from "react-icons/fa";
+import Image from "next/image";
+import imageCompression from "browser-image-compression";
 
 interface ImageExtended {
   id: string;
   url: string;
+  file?: File;
   toDelete?: boolean;
   isNew?: boolean;
 }
@@ -41,76 +40,126 @@ interface ModifyProductProps {
     imagenes: { id: string; url: string }[];
     seccionIds: string[];
   };
-  allSections: {
-    id: string;
-    nombre: string;
-  }[];
+  allSections: { id: string; nombre: string }[];
+}
+
+interface ModifyProductFormData {
+  nombre: string;
+  precio: number;
+  descripcion: string;
+  descripcionCorta?: string;
+  slug: string;
+  prioridad?: number;
+  status: "available" | "out_of_stock" | "discontinued";
+  tags: string;
+  seccionIds: string[]; // Añadimos el campo seccionIds
 }
 
 export default function ModifyProduct({ product, allSections }: ModifyProductProps) {
-  const { register, handleSubmit, control, setValue, watch } = useForm({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<ModifyProductFormData>({
     defaultValues: {
       ...product,
       tags: product.tags.join(", "),
-      seccionIds: new Set(product.seccionIds),
+      seccionIds: product.seccionIds, // Sección añadida en defaultValues
       status: product.status || "available",
     },
   });
 
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [images, setImages] = useState<ImageExtended[]>([]);
+  const [loading, setLoading] = useState(false);
+  const selectedSections = watch("seccionIds") || []; // Se asegura de que sea un array
 
   useEffect(() => {
     setImages(product.imagenes.map((img) => ({ ...img })));
   }, [product.imagenes]);
 
-  const onSubmit = async (data: any) => {
-    const success = await modifyProduct({
-      id: product.id,
-      nombre: data.nombre,
-      precio: parseFloat(data.precio),
-      descripcion: data.descripcion,
-      descripcionCorta: data.descripcionCorta || undefined,
-      slug: data.slug,
-      prioridad: data.prioridad ? parseInt(data.prioridad) : undefined,
-      status: data.status || "available",
-      tags: typeof data.tags === "string" ? data.tags.split(",").map((tag: string) => tag.trim()) : [],
-      seccionIds: Array.from(data.seccionIds),
-      imagesToDelete: images.filter((img) => img.toDelete).map((img) => img.id),
-      newImages: images.filter((img) => img.isNew).map((img) => img.url),
-    });
+  const toggleSection = (id: string) => {
+    const updatedSections = selectedSections.includes(id)
+      ? selectedSections.filter((sectionId) => sectionId !== id)
+      : [...selectedSections, id];
+    setValue("seccionIds", updatedSections);
+  };
 
-    if (success) {
-      setAlert({ type: "success", message: "Producto modificado exitosamente." });
+  const onSubmit = async (data: ModifyProductFormData) => {
+    setAlert(null);
+    setLoading(true);
+
+    const formData = new FormData();
+    formData.append("id", product.id);
+    formData.append("nombre", data.nombre);
+    formData.append("precio", data.precio.toString());
+    formData.append("descripcion", data.descripcion);
+    formData.append("descripcionCorta", data.descripcionCorta || "");
+    formData.append("slug", data.slug.toLowerCase().replace(/ /g, "-").trim());
+    formData.append("prioridad", (data.prioridad || 0).toString());
+    formData.append("status", data.status || "available");
+    formData.append("tags", data.tags);
+
+    // Secciones
+    data.seccionIds.forEach((id) => formData.append("seccionIds", id));
+
+    // Imágenes para borrar
+    images
+      .filter((img) => img.toDelete)
+      .forEach((img) => formData.append("imagesToDelete", img.id));
+
+    // Imágenes nuevas
+    const newImages = images.filter((img) => img.isNew && img.file);
+    newImages.forEach((img) => formData.append("newImages", img.file as File));
+
+    const result = await modifyProduct(formData);
+    setLoading(false);
+
+    if (result.ok) {
+      setAlert({ type: "success", message: result.message });
     } else {
-      setAlert({ type: "error", message: "Ocurrió un error al modificar el producto." });
+      setAlert({ type: "error", message: result.message || "Ocurrió un error al modificar el producto." });
     }
   };
 
-  const handleAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (typeof window === "undefined" || !e.target.files) return;
+  const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
 
-    const newImages = Array.from(e.target.files).map((file) => ({
-      id: crypto.randomUUID(),
-      url: URL.createObjectURL(file),
-      isNew: true,
-    }));
-    setImages((prev) => [...prev, ...newImages]);
+    setLoading(true);
+
+    const compressedImages = await Promise.all(
+      Array.from(e.target.files).map(async (file) => {
+        const compressedFile = await imageCompression(file, {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 1920,
+        });
+
+        return {
+          id: crypto.randomUUID(),
+          file: compressedFile,
+          url: URL.createObjectURL(compressedFile),
+          isNew: true,
+        };
+      })
+    );
+
+    setLoading(false);
+    setImages((prev) => [...prev, ...compressedImages]);
   };
 
-  const handleRemoveImage = async (id: string) => {
-    const image = images.find((img) => img.id === id);
-    if (!image) return;
-
-    if (!image.isNew) {
-      const success = await deleteImage(image.url);
-      if (!success) {
-        setAlert({ type: "error", message: "No se pudo eliminar la imagen." });
-        return;
-      }
-    }
-
-    setImages((prev) => prev.filter((img) => img.id !== id));
+  const handleRemoveImage = (id: string) => {
+    setImages((prev) =>
+      prev.map((img) =>
+        img.id === id
+          ? {
+              ...img,
+              toDelete: true,
+            }
+          : img
+      )
+    );
   };
 
   return (
@@ -120,119 +169,124 @@ export default function ModifyProduct({ product, allSections }: ModifyProductPro
     >
       <h2 className="text-3xl font-bold text-center mb-4">Modificar Producto</h2>
 
+      {/* Nombre */}
       <TextField
         label="Nombre"
         {...register("nombre", { required: "El nombre es obligatorio" })}
         fullWidth
-        variant="outlined"
+        error={!!errors.nombre}
+        helperText={errors.nombre?.message}
       />
 
+      {/* Precio */}
       <TextField
         label="Precio"
         type="number"
         {...register("precio", { required: "El precio es obligatorio" })}
         fullWidth
-        variant="outlined"
+        error={!!errors.precio}
+        helperText={errors.precio?.message}
       />
 
+      {/* Descripción */}
       <TextField
         label="Descripción"
         {...register("descripcion", { required: "La descripción es obligatoria" })}
         fullWidth
         multiline
         rows={4}
-        variant="outlined"
+        error={!!errors.descripcion}
+        helperText={errors.descripcion?.message}
       />
 
-      <TextField
-        label="Descripción Corta"
-        {...register("descripcionCorta")}
-        fullWidth
-        variant="outlined"
-      />
+      {/* Descripción Corta */}
+      <TextField label="Descripción Corta" {...register("descripcionCorta")} fullWidth />
 
+      {/* Slug */}
       <TextField
         label="Slug"
         {...register("slug", { required: "El slug es obligatorio" })}
         fullWidth
-        variant="outlined"
+        error={!!errors.slug}
+        helperText={errors.slug?.message}
       />
 
-      <TextField
-        label="Prioridad"
-        type="number"
-        {...register("prioridad")}
-        fullWidth
-        variant="outlined"
-      />
+      {/* Prioridad */}
+      <TextField label="Prioridad" type="number" {...register("prioridad")} fullWidth />
 
+      {/* Estado */}
       <FormControl>
         <FormLabel>Estado</FormLabel>
-        <Controller
-          name="status"
-          control={control}
-          render={({ field }) => (
-            <RadioGroup {...field} row>
-              <FormControlLabel value="available" control={<Radio />} label="Disponible" />
-              <FormControlLabel value="out_of_stock" control={<Radio />} label="Agotado" />
-              <FormControlLabel value="discontinued" control={<Radio />} label="Descontinuado" />
-            </RadioGroup>
-          )}
-        />
+        <select {...register("status")}>
+          <option value="available">Disponible</option>
+          <option value="out_of_stock">Agotado</option>
+          <option value="discontinued">Descontinuado</option>
+        </select>
       </FormControl>
 
-      <TextField
-        label="Tags (separados por coma)"
-        {...register("tags")}
-        fullWidth
-        variant="outlined"
-      />
+      {/* Tags */}
+      <TextField label="Tags (separados por coma)" {...register("tags")} fullWidth />
 
+      {/* Secciones */}
       <div>
-        <h3 className="font-semibold mb-4">Imágenes</h3>
-        <div className="flex gap-6 flex-wrap mb-6">
-          {images.map((img) => (
-            <div key={img.id} className="relative w-24 h-24">
-              <img
-                src={img.url}
-                alt="Producto"
-                className="w-full h-full object-cover rounded-md"
+        <FormLabel>Secciones</FormLabel>
+        <Stack direction="row" spacing={2} flexWrap="wrap">
+          {allSections.map((section) => (
+            <FormControlLabel
+              key={section.id}
+              control={
+                <Checkbox
+                  checked={selectedSections.includes(section.id)}
+                  onChange={() => toggleSection(section.id)}
+                />
+              }
+              label={section.nombre}
+            />
+          ))}
+        </Stack>
+      </div>
+
+      {/* Imágenes */}
+      <div>
+        <FormLabel>Imágenes</FormLabel>
+        <Stack direction="row" spacing={2} flexWrap="wrap">
+          {images.map((image) => (
+            <div key={image.id} className="relative w-24 h-24">
+              <Image
+                src={image.url}
+                alt="Imagen"
+                className="rounded-md"
+                fill
+                style={{ objectFit: "cover" }}
               />
+              {image.toDelete && (
+                <div className="absolute inset-0 bg-red-500 bg-opacity-50 flex items-center justify-center rounded-md">
+                  <span className="text-white font-bold">Eliminar</span>
+                </div>
+              )}
               <IconButton
-                className="absolute top-0 right-0 m-1 bg-white"
-                onClick={() => handleRemoveImage(img.id)}
-                style={{
-                  zIndex: 10,
-                  background: "rgba(255, 255, 255, 0.9)",
-                  borderRadius: "50%",
-                }}
+                onClick={() => handleRemoveImage(image.id)}
+                className="absolute top-0 right-0"
               >
-                <FaTrashAlt color="red" size={16} />
+                <FaTrashAlt />
               </IconButton>
             </div>
           ))}
-        </div>
-        <Button variant="outlined" component="label" className="mt-4">
-          Añadir imágenes
-          <input type="file" hidden multiple onChange={handleAddImage} />
-        </Button>
+          <input type="file" multiple onChange={handleAddImage} />
+        </Stack>
       </div>
 
-      {alert && (
-        <Stack sx={{ width: "100%" }} spacing={2}>
-          <Alert severity={alert.type}>{alert.message}</Alert>
-        </Stack>
-      )}
-
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        className="flex items-center justify-center w-full mt-6"
-        startIcon={<AiOutlineCheckCircle />}
-      >
-        Modificar Producto
+      {/* Botón de Guardar */}
+      <Button type="submit" variant="contained" color="primary" disabled={loading}>
+        {loading ? "Guardando..." : "Guardar Cambios"}
       </Button>
+
+      {/* Alertas */}
+      {alert && (
+        <Alert severity={alert.type} onClose={() => setAlert(null)}>
+          {alert.message}
+        </Alert>
+      )}
     </form>
   );
 }

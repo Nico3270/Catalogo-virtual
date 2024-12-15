@@ -1,67 +1,101 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { v2 as cloudinary } from "cloudinary";
 
-interface ModifyProductInput {
-  id: string;
-  nombre: string;
-  precio: number;
-  descripcion: string;
-  descripcionCorta?: string;
-  slug: string;
-  prioridad?: number;
-  status: string;
-  tags: string[];
-  seccionIds: string[];
-  imagesToDelete: string[];
-  newImages: string[];
-}
+cloudinary.config(process.env.CLOUDINARY_URL || "");
 
-export async function modifyProduct(input: ModifyProductInput): Promise<boolean> {
+export async function modifyProduct(formData: FormData) {
   try {
-    // Actualizar el producto principal
+    const id = formData.get("id") as string;
+    const nombre = formData.get("nombre") as string;
+    const precio = parseFloat(formData.get("precio") as string);
+    const descripcion = formData.get("descripcion") as string;
+    const descripcionCorta = formData.get("descripcionCorta") as string;
+    const slug = formData.get("slug") as string;
+    const prioridad = parseInt(formData.get("prioridad") as string);
+    const status = formData.get("status") as string;
+    const tags = (formData.get("tags") as string).split(",").map((tag) => tag.trim());
+    const seccionIds = formData.getAll("seccionIds") as string[];
+    const imagesToDelete = formData.getAll("imagesToDelete") as string[];
+    const newImages = formData.getAll("newImages") as File[];
+
+    // **Eliminar imágenes marcadas para borrar**
+    if (imagesToDelete.length > 0) {
+      // Obtener las URLs de las imágenes a borrar
+      const images = await prisma.image.findMany({
+        where: { id: { in: imagesToDelete } },
+      });
+
+      // Eliminar imágenes de Cloudinary
+      await Promise.all(
+        images.map(async (image) => {
+          const publicId = image.url.split("/").pop()?.split(".")[0]; // Extraer el publicId de la URL
+          if (publicId) {
+            await cloudinary.uploader.destroy(publicId);
+          }
+        })
+      );
+
+      // Eliminar imágenes de la base de datos
+      await prisma.image.deleteMany({
+        where: { id: { in: imagesToDelete } },
+      });
+    }
+
+    // **Subir nuevas imágenes a Cloudinary**
+    const uploadedImages = await Promise.all(
+      newImages.map(async (image) => {
+        const buffer = await image.arrayBuffer();
+        const base64Image = Buffer.from(buffer).toString("base64");
+        const result = await cloudinary.uploader.upload(`data:image/png;base64,${base64Image}`);
+        return result.secure_url; // Retornar el URL seguro
+      })
+    );
+
+    // **Actualizar las relaciones con las secciones**
+    // Primero, eliminar todas las relaciones existentes con las secciones
+    await prisma.productSection.deleteMany({
+      where: { productId: id },
+    });
+
+    // Luego, agregar las nuevas relaciones con las secciones
+    const sectionConnections = seccionIds.map((seccionId) => ({
+      productId: id,
+      sectionId: seccionId,
+    }));
+    await prisma.productSection.createMany({
+      data: sectionConnections,
+    });
+
+    // **Actualizar el producto principal**
     await prisma.product.update({
-      where: { id: input.id },
+      where: { id },
       data: {
-        nombre: input.nombre,
-        precio: input.precio,
-        descripcion: input.descripcion,
-        descripcionCorta: input.descripcionCorta,
-        slug: input.slug,
-        prioridad: input.prioridad,
-        status: input.status,
-        tags: input.tags,
+        nombre,
+        precio,
+        descripcion,
+        descripcionCorta,
+        slug,
+        prioridad,
+        status,
+        tags,
       },
     });
 
-    // Eliminar imágenes
-    if (input.imagesToDelete.length > 0) {
-      await prisma.image.deleteMany({
-        where: { id: { in: input.imagesToDelete } },
-      });
-    }
-
-    // Agregar nuevas imágenes
-    if (input.newImages.length > 0) {
+    // **Agregar las nuevas imágenes al producto**
+    if (uploadedImages.length > 0) {
       await prisma.image.createMany({
-        data: input.newImages.map((url) => ({ url, productId: input.id })),
+        data: uploadedImages.map((url) => ({
+          url,
+          productId: id,
+        })),
       });
     }
 
-    // Asegurarse de que al menos quede una imagen
-    const remainingImages = await prisma.image.count({
-      where: { productId: input.id },
-    });
-
-    if (remainingImages === 0) {
-      await prisma.image.create({
-        data: { url: "/imgs/image_not_found.webp", productId: input.id },
-      });
-    }
-
-    return true;
+    return { ok: true, message: "Producto modificado exitosamente." };
   } catch (error) {
-    console.error("Error al modificar el producto:", error);
-    return false;
+    console.error("Error al modificar producto:", error);
+    return { ok: false, message: "Error al modificar el producto." };
   }
 }

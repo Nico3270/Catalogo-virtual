@@ -16,15 +16,27 @@ import {
   FormControlLabel,
   IconButton,
 } from "@mui/material";
-import { AiOutlineCheckCircle, AiOutlinePlus } from "react-icons/ai";
+import { AiOutlinePlus } from "react-icons/ai";
 import { FaTrashAlt } from "react-icons/fa";
+import Image from "next/image";
 
 interface CreateNewProductProps {
   allSections: { id: string; name: string }[];
 }
 
+interface ProductFormData {
+  nombre: string;
+  precio: number;
+  descripcion: string;
+  descripcionCorta: string;
+  slug: string;
+  prioridad: number;
+  status: "available" | "out_of_stock";
+  tags: string;
+}
+
 export default function CreateNewProduct({ allSections }: CreateNewProductProps) {
-  const { register, handleSubmit, control } = useForm({
+  const { register, handleSubmit, control } = useForm<ProductFormData>({
     defaultValues: {
       nombre: "",
       precio: 0,
@@ -39,23 +51,32 @@ export default function CreateNewProduct({ allSections }: CreateNewProductProps)
 
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [selectedSections, setSelectedSections] = useState<Set<string>>(new Set());
-  const [images, setImages] = useState<{ id: string; url: string; isNew: boolean }[]>([]);
+  const [images, setImages] = useState<{ id: string; file: File; url: string }[]>([]);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: ProductFormData) => {
     try {
-      const result = await createProduct({
-        ...data,
-        precio: parseFloat(data.precio),
-        prioridad: parseInt(data.prioridad, 10),
-        tags: data.tags.split(",").map((tag: string) => tag.trim()),
-        seccionIds: Array.from(selectedSections),
-        newImages: images.map((img) => img.url),
-      });
+      const formData = new FormData();
+      formData.append("nombre", data.nombre);
+      formData.append("precio", data.precio.toString());
+      formData.append("descripcion", data.descripcion);
+      formData.append("descripcionCorta", data.descripcionCorta);
+      formData.append("slug", data.slug.toLowerCase().replace(/ /g, "-").trim());
+      formData.append("prioridad", data.prioridad.toString());
+      formData.append("status", data.status);
+      formData.append("tags", data.tags);
 
-      if (result) {
+      // Agregar IDs de secciones seleccionadas
+      selectedSections.forEach((id) => formData.append("seccionIds", id));
+
+      // Agregar imágenes al FormData
+      images.forEach((img) => formData.append("images", img.file));
+
+      const result = await createProduct(formData);
+
+      if (result.ok) {
         setAlert({ type: "success", message: "Producto creado exitosamente." });
       } else {
-        setAlert({ type: "error", message: "Ocurrió un error al crear el producto." });
+        setAlert({ type: "error", message: result.message || "Ocurrió un error al crear el producto." });
       }
     } catch (error) {
       setAlert({ type: "error", message: "Error al crear el producto." });
@@ -67,8 +88,8 @@ export default function CreateNewProduct({ allSections }: CreateNewProductProps)
     if (e.target.files) {
       const newImages = Array.from(e.target.files).map((file) => ({
         id: crypto.randomUUID(),
+        file,
         url: URL.createObjectURL(file),
-        isNew: true,
       }));
       setImages((prev) => [...prev, ...newImages]);
     }
@@ -78,9 +99,19 @@ export default function CreateNewProduct({ allSections }: CreateNewProductProps)
     setImages((prev) => prev.filter((img) => img.id !== id));
   };
 
+  const toggleSection = (id: string) => {
+    setSelectedSections((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) newSet.delete(id);
+      else newSet.add(id);
+      return newSet;
+    });
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 bg-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto">
       <h2 className="text-3xl font-bold text-center mb-6">Crear Nuevo Producto</h2>
+
       <TextField label="Nombre" {...register("nombre", { required: true })} fullWidth />
       <TextField label="Precio" type="number" {...register("precio", { required: true })} fullWidth />
       <TextField label="Descripción" {...register("descripcion", { required: true })} fullWidth multiline rows={4} />
@@ -102,58 +133,62 @@ export default function CreateNewProduct({ allSections }: CreateNewProductProps)
         />
       </FormControl>
 
+      {/* Secciones */}
       <div>
-        <h3>Secciones</h3>
-        {allSections.map((section) => (
-          <Chip
-            key={section.id}
-            label={section.name}
-            color={selectedSections.has(section.id) ? "primary" : "default"}
-            clickable
-            onClick={() =>
-              setSelectedSections((prev) => {
-                const newSet = new Set(prev);
-                if (newSet.has(section.id)) {
-                  newSet.delete(section.id);
-                } else {
-                  newSet.add(section.id);
-                }
-                return newSet;
-              })
-            }
-          />
-        ))}
+        <h3 className="font-bold mb-2">Secciones</h3>
+        <Stack direction="row" spacing={1} flexWrap="wrap">
+          {allSections.map((section) => (
+            <Chip
+              key={section.id}
+              label={section.name}
+              onClick={() => toggleSection(section.id)}
+              color={selectedSections.has(section.id) ? "primary" : "default"}
+              clickable
+            />
+          ))}
+        </Stack>
       </div>
 
+      {/* Imágenes */}
       <div>
-        <h3>Imágenes</h3>
-        <input type="file" multiple onChange={handleAddImage} />
-        <div className="flex gap-4 flex-wrap mt-4">
+        <h3 className="font-bold mb-2">Imágenes</h3>
+        <Stack direction="row" spacing={2} flexWrap="wrap">
           {images.map((img) => (
-            <div key={img.id} className="relative w-24 h-24">
-              <img src={img.url} alt="Imagen subida" className="w-full h-full object-cover rounded-md" />
+            <div key={img.id} className="relative w-32 h-32">
+              <Image
+                src={img.url}
+                alt="Previsualización"
+                className="rounded-lg"
+                fill
+                style={{ objectFit: "cover" }}
+              />
               <IconButton
-                className="absolute top-0 right-0 bg-white"
+                size="small"
                 onClick={() => handleRemoveImage(img.id)}
+                className="absolute top-0 right-0 bg-white"
               >
                 <FaTrashAlt color="red" />
               </IconButton>
             </div>
           ))}
-        </div>
+          <label className="flex items-center justify-center w-32 h-32 border-2 border-dashed rounded-lg cursor-pointer">
+            <AiOutlinePlus size={24} />
+            <input type="file" accept="image/*" multiple onChange={handleAddImage} className="hidden" />
+          </label>
+        </Stack>
       </div>
 
-      <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        className="w-full flex items-center justify-center mt-6"
-        startIcon={<AiOutlineCheckCircle />}
-      >
+      {/* Botón de envío */}
+      <Button type="submit" variant="contained" color="primary" fullWidth>
         Crear Producto
       </Button>
 
-      {alert && <Stack sx={{ width: "100%" }} spacing={2} className="mt-4"><Alert severity={alert.type}>{alert.message}</Alert></Stack>}
+      {/* Alerta */}
+      {alert && (
+        <Alert severity={alert.type} onClose={() => setAlert(null)}>
+          {alert.message}
+        </Alert>
+      )}
     </form>
   );
 }

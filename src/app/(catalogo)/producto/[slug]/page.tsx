@@ -5,8 +5,6 @@ import { ResponsiveSlideShow } from "@/producto/components/ResonsiveSlideShow";
 import { Precio } from "@/seccion/componentes/Precio";
 import { AddToCart } from "@/producto/components/AddToCart"; // Asegúrate de que este componente sea un Client Component
 import { getProductBySlug } from "@/producto/actions/getProductBySlug";
-import { BsWhatsapp } from "react-icons/bs";
-import { FaShoppingCart } from "react-icons/fa";
 
 interface Props {
   params: {
@@ -16,7 +14,8 @@ interface Props {
 
 // Generar metadatos dinámicos basados en el producto
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = params;
+  const slug = await params?.slug; // Asegúrate de que params sea esperado como objeto resolviendo sus propiedades
+
   const { product } = await getProductBySlug(slug);
 
   if (!product) {
@@ -51,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 // Página principal del producto
 export default async function ProductPage({ params }: Props) {
-  const { slug } = params;
+  const slug = await params?.slug; // Asegúrate de esperar la resolución de params
 
   // Obtener el producto y productos similares desde la acción
   const { product, similarProducts } = await getProductBySlug(slug);
@@ -59,8 +58,6 @@ export default async function ProductPage({ params }: Props) {
   if (!product) {
     notFound(); // Mostrar una página 404 si no se encuentra el producto
   }
-
-  
 
   return (
     <div className="container mx-auto p-4">
@@ -72,16 +69,14 @@ export default async function ProductPage({ params }: Props) {
 
         {/* Detalles del producto */}
         <div className="flex flex-col space-y-6 md:space-y-4 md:flex-grow">
-          
 
-          {/* Botones en la misma fila */}
-          <div className="flex gap-4 items-center">
-            {/* Botón de agregar al carrito */}
-            <div className="flex-1">
-              <AddToCart product={product} />
-            </div>
 
+          {/* Botón de agregar al carrito */}
+          <div>
+            <AddToCart product={product} />
           </div>
+
+          
         </div>
       </div>
 
