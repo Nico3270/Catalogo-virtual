@@ -3,12 +3,12 @@ import { getOrderById } from "@/order/actions/getOrderById";
 import { ShowInformationOrder } from "@/order/componentes/ShowInformationOrder";
 
 interface Props {
-  params: { id: string }; // El ID de la orden
+  params: Promise<{id:string}>
 }
 
 export default async function OrderPage({ params }: Props) {
   // Asegúrate de esperar los params usando `await` 
-  const { id } = await Promise.resolve(params);
+  const { id } = await params;
 
   if (!id) {
     return (

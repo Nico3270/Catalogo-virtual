@@ -3,10 +3,12 @@ import ShowBlogArticle from "@/blog/componentes/ShowBlogArticle";
 import { getProductsCarruselBySlug } from "@/producto/actions/getProductsCarruselBySlug";
 import { ProductsCarrusel } from "@/producto/components/ProductsCarrusel";
 
+// Ajuste en el tipo para aceptar `params` como una promesa
+type Params = Promise<{ slug: string }>;
 
-
-export default async function BlogPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function BlogPage({ params }: { params: Params }) {
+  // Esperar `params` antes de acceder a sus propiedades
+  const { slug } = await params;
 
   // Obtener el artículo desde la base de datos
   const article = await getArticleInformation(slug);
@@ -29,4 +31,3 @@ export default async function BlogPage({ params }: { params: { slug: string } })
     </div>
   );
 }
-

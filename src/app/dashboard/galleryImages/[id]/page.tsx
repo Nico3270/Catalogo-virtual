@@ -2,8 +2,15 @@ import React from "react";
 import { getImageFromGalleryById } from "@/galeria/actions/getImageFromGalleryById";
 import ModifyGalleryImage from "@/galeria/componentes/ModifyGalleryImage";
 
-const Page = async ({ params }: { params: { id: string } }) => {
-  const image = await getImageFromGalleryById(params.id);
+interface Props {
+  params: Promise<{ id: string }>;
+}
+
+const Page = async ({ params }: Props) => {
+  // Resolver params antes de acceder a 'id'
+  const { id } = await params;
+
+  const image = await getImageFromGalleryById(id);
 
   if (!image) {
     return (

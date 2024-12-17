@@ -12,6 +12,9 @@ export const authConfig: NextAuthConfig = {
     newUser: "/auth/new-account",
   },
 
+  // Añadir trustHost aquí
+  trustHost: true, // Confía en localhost y otros hosts durante desarrollo
+
   callbacks: {
     async signIn({ user, account, profile }) {
       if (account?.provider === "google") {
@@ -67,32 +70,34 @@ export const authConfig: NextAuthConfig = {
     }),
 
     Credentials({
-  async authorize(credentials) {
-    const parsedCredentials = z
-      .object({ email: z.string().email(), password: z.string().min(6) })
-      .safeParse(credentials);
+      async authorize(credentials) {
+        const parsedCredentials = z
+          .object({ email: z.string().email(), password: z.string().min(6) })
+          .safeParse(credentials);
 
-    if (!parsedCredentials.success) return null;
+        if (!parsedCredentials.success) return null;
 
-    const { email, password } = parsedCredentials.data;
+        const { email, password } = parsedCredentials.data;
 
-    const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() },
-    });
-    if (!user) return null;
+        const user = await prisma.user.findUnique({
+          where: { email: email.toLowerCase() },
+        });
+        if (!user) return null;
 
-    if (!bcryptjs.compareSync(password, user.password)) return null;
+        if (!bcryptjs.compareSync(password, user.password)) return null;
 
-    // Retorna el usuario sin incluir la contraseña
-    const { password: _, ...userWithoutPassword } = user; // eslint-disable-line @typescript-eslint/no-unused-vars
+        // Retorna el usuario sin incluir la contraseña
 
-   
-    return {
-      ...userWithoutPassword,
-      emailVerified: user.emailVerified || null, // Asegura que exista
-    };
-  },
-}),
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password: _, ...userWithoutPassword } = user;
+
+
+        return {
+          ...userWithoutPassword,
+          emailVerified: user.emailVerified || null,
+        };
+      },
+    }),
   ],
 };
 

@@ -3,7 +3,7 @@ import ModifyProduct from "@/productos/components/ModifyProduct";
 import { notFound } from "next/navigation";
 
 interface ProductPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 // Define los valores válidos para status
@@ -15,7 +15,7 @@ function isValidStatus(status: string): status is typeof validStatuses[number] {
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { id } = params;
+  const { id } = await params;
 
   const data = await getProductAndSectionToModifyProduct(id);
 

@@ -15,7 +15,7 @@ export interface PrismaSection {
   id: string;
   nombre: string;
   slug: string;
-  iconName: string;
+  iconName: string | null; // Permitir null aquí
   order: number;
   isActive: boolean;
 }
@@ -23,17 +23,17 @@ export interface PrismaSection {
 export const getSectionsFromDB = async (): Promise<Section[]> => {
   try {
     // Consulta a la base de datos para obtener secciones activas y ordenadas
-    const sections: PrismaSection[] = await prisma.section.findMany({
-      where: { isActive: true }, // Solo secciones activas
-      orderBy: { order: "asc" }, // Ordenar por el campo `order` ascendentemente
+    const sections = await prisma.section.findMany({
+      where: { isActive: true },
+      orderBy: { order: "asc" },
     });
 
-    // Mapeo para transformar los datos según el formato requerido
+    // Transformar las secciones al formato esperado (Section[])
     return sections.map((section) => ({
       id: section.id,
       name: section.nombre,
       href: section.slug,
-      iconName: section.iconName, // Pasar solo el nombre del ícono como cadena
+      iconName: section.iconName ?? "default-icon", // Asignar un valor por defecto si es null
     }));
   } catch (error) {
     console.error("Error al obtener secciones:", error);

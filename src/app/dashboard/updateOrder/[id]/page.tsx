@@ -2,13 +2,13 @@ import { UpdateOrder } from "@/order/componentes/UpdateOrder";
 import { getInformationByIdUpdateOrder } from "@/orders/actions/getInformationByIdUpdateOrder";
 
 interface Props {
-  params: {
+  params: Promise<{
     id: string; // El ID de la orden
-  };
+  }>
 }
 
 export default async function UpdateOrderPage({ params }: Props) {
-  const {id }= params;
+  const {id} = await  params;
 
   if (!id) {
     return (

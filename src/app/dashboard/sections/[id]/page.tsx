@@ -1,19 +1,26 @@
 import { getSectionById } from "@/seccion/actions/getSectionById";
 import { UpdateSection } from "@/seccion/componentes/UpdateSection";
 
-
 interface Props {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>
 }
 
 export default async function SectionIdPage({ params }: Props) {
-  const section = await getSectionById(params.id);
+  const { id } = await params;
+
+  const section = await getSectionById(id);
+
+  // Asegura que iconName no sea null
+  const sanitizedSection = {
+    ...section,
+    iconName: section.iconName ?? "", // Asigna un string vacío si iconName es null
+  };
 
   return (
     <div>
-      <UpdateSection section={section} />
+      <UpdateSection section={sanitizedSection} />
     </div>
   );
 }

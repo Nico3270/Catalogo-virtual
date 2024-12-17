@@ -2,10 +2,9 @@ import GalleryComponent from "@/galeria/componentes/GalleryComponent";
 import { getProductsCarrusel } from "@/producto/actions/getProductsCarrusel";
 import { ProductsCarrusel } from "@/producto/components/ProductsCarrusel";
 import { fetchGalleryImages } from "@/galeria/actions/fetchGalleryImages";
-import React from "react";
 import { fetchGalleryVideos } from "@/galeria/actions/fetchGalleryVideos";
 
-export const GalleryPage = async () => {
+export default async function GalleryPage() {
   // Llamada a las acciones para obtener los datos
   const productsCarrusel = await getProductsCarrusel();
   const images = await fetchGalleryImages();
@@ -13,11 +12,9 @@ export const GalleryPage = async () => {
 
   return (
     <div>
-      {/* Pasamos las imágenes desde la base de datos */}
+      {/* Pasamos las imágenes y videos desde la base de datos */}
       <GalleryComponent videos={videos} images={images} />
       <ProductsCarrusel products={productsCarrusel} />
     </div>
   );
-};
-
-export default GalleryPage;
+}

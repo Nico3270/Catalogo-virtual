@@ -2,8 +2,15 @@ import React from "react";
 import { getVideoFromGalleryById } from "@/galeria/actions/getVideoFromGalleryById";
 import ModifyGalleryVideo from "@/galeria/componentes/ModifyGalleryVideo";
 
-const Page = async ({ params }: { params: { id: string } }) => {
-  const video = await getVideoFromGalleryById(params.id);
+interface Props {
+  params: Promise<{ id: string }>;
+}
+
+const Page = async ({ params }: Props) => {
+  // Resolver params antes de acceder a 'id'
+  const { id } = await params;
+
+  const video = await getVideoFromGalleryById(id);
 
   if (!video) {
     return (

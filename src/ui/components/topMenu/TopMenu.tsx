@@ -131,7 +131,7 @@ export const TopMenu = () => {
           </button>
         </div>
       </div>
-      <SideBar open={isDrawerOpen} toggleDrawer={toggleDrawer} role="admin" />
+      <SideBar open={isDrawerOpen} toggleDrawer={toggleDrawer}  />
       <MenuSectionsBar />
     </header>
   );

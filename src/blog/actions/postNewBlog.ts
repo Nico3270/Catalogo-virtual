@@ -16,14 +16,14 @@ interface BlogData {
 }
 
 // Función principal
-export const postNewBlog = async (data: BlogData) => {
+export const postNewBlog = async (data: BlogData): Promise<void> => {
   const { titulo, descripcion, imagen, imagenes, parrafos, subtitulos, autor, orden, secciones } = data;
 
   // Generar el slug a partir del título
   const slug = generateSlug(titulo);
 
   try {
-    const newBlog = await prisma.articulo.create({
+    await prisma.articulo.create({
       data: {
         titulo,
         slug, // Incluir el slug generado
@@ -41,8 +41,6 @@ export const postNewBlog = async (data: BlogData) => {
         },
       },
     });
-
-    return newBlog;
   } catch (error) {
     console.error("Error posting new blog:", error);
     throw new Error("No se pudo insertar el blog.");

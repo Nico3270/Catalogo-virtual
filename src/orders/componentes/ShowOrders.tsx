@@ -12,7 +12,7 @@ interface OrderItem {
   id: string;
   cantidad: number;
   comentario?: string | null;
-  producto: {
+  producto?: {
     id: string;
     nombre: string;
     descripcion: string;
@@ -22,7 +22,7 @@ interface OrderItem {
     prioridad?: number | null;
     status: string;
     tags: string[];
-  };
+  } | null; // Permitir que producto sea null
 }
 
 interface Order {
@@ -210,7 +210,8 @@ export const ShowOrders = ({ orders, totalOrders, ordersPerPage }: ShowOrdersPro
                   <ul>
                     {order.items.map((item) => (
                       <li key={item.id}>
-                        {item.cantidad} x {item.producto ? item.producto.nombre : "Producto eliminado"}
+                        {item.cantidad} x {item.producto?.nombre ?? "Producto eliminado"}
+
                         {item.comentario && ` (${item.comentario})`}
                       </li>
                     ))}

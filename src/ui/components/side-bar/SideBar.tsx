@@ -29,6 +29,7 @@ import { MdAddBusiness, MdDashboardCustomize } from "react-icons/md";
 interface SideBarProps {
   open: boolean;
   toggleDrawer: (open: boolean) => void;
+  role?: string; // Hacemos que 'role' sea opcional
 }
 
 // Configuración del menú para cada rol

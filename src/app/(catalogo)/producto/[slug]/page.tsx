@@ -6,14 +6,14 @@ import { AddToCart } from "@/producto/components/AddToCart";
 import { getProductBySlug } from "@/producto/actions/getProductBySlug";
 
 interface Props {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 // Generar metadatos dinámicos basados en el producto
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = params; // Accede directamente a la propiedad slug sin await
+  const { slug } = await params; // Asegúrate de await params
 
   const { product } = await getProductBySlug(slug);
 
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: "Producto no encontrado",
       description: "El producto que estás buscando no existe.",
       robots: {
-        index: false, // Evitar indexación de páginas de productos inexistentes
+        index: false,
       },
     };
   }
@@ -49,13 +49,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 // Página principal del producto
 export default async function ProductPage({ params }: Props) {
-  const { slug } = params; // Correcto, no se necesita await
+  const { slug } = await params; // Asegúrate de await params
 
-  // Obtener el producto y productos similares desde la acción
   const { product, similarProducts } = await getProductBySlug(slug);
 
   if (!product) {
-    notFound(); // Mostrar una página 404 si no se encuentra el producto
+    notFound();
   }
 
   return (
@@ -68,10 +67,7 @@ export default async function ProductPage({ params }: Props) {
 
         {/* Detalles del producto */}
         <div className="flex flex-col space-y-6 md:space-y-4 md:flex-grow">
-          {/* Botón de agregar al carrito */}
-          <div>
-            <AddToCart product={product} />
-          </div>
+          <AddToCart product={product} />
         </div>
       </div>
 

@@ -2,9 +2,9 @@ import { ProductGrid } from "@/seccion/componentes/ProductGridSeccion";
 import { getProductsBySection } from "@/seccion/actions/getProductsBySection";
 
 interface Props {
-  params: {
+  params: Promise<{
     id: string; // El slug de la sección
-  };
+  }>;
 }
 
 export default async function SectionPage({ params }: Props) {
