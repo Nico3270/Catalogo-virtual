@@ -1,8 +1,22 @@
-"use server"
+"use server";
 
 import prisma from "@/lib/prisma";
 
-export const postNewBlog = async (data: any) => {
+// Define una interfaz para los datos del blog
+interface BlogData {
+  titulo: string;
+  descripcion: string;
+  imagen: string;
+  imagenes: { url: string }[];
+  parrafos: { texto: string }[];
+  subtitulos: { texto: string }[];
+  autor: string;
+  orden: number;
+  secciones: string[]; // IDs de las secciones
+}
+
+// Función principal
+export const postNewBlog = async (data: BlogData) => {
   const { titulo, descripcion, imagen, imagenes, parrafos, subtitulos, autor, orden, secciones } = data;
 
   // Generar el slug a partir del título
@@ -15,13 +29,13 @@ export const postNewBlog = async (data: any) => {
         slug, // Incluir el slug generado
         descripcion,
         imagen,
-        imagenes: imagenes.map((img: { url: string }) => img.url),
-        parrafos: parrafos.map((p: { texto: string }) => p.texto),
-        subtitulos: subtitulos.map((s: { texto: string }) => s.texto),
+        imagenes: imagenes.map((img) => img.url), // Extraer las URLs de imágenes
+        parrafos: parrafos.map((p) => p.texto), // Extraer los textos de párrafos
+        subtitulos: subtitulos.map((s) => s.texto), // Extraer los textos de subtítulos
         autor,
         orden,
         secciones: {
-          create: secciones.map((sectionId: string) => ({
+          create: secciones.map((sectionId) => ({
             section: { connect: { id: sectionId } },
           })),
         },

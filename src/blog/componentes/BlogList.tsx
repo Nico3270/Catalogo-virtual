@@ -7,6 +7,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  DragEndEvent,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -34,7 +35,7 @@ const BlogList = ({ blogs: initialBlogs }: { blogs: Blog[] }) => {
     setIsHydrated(true);
   }, []);
 
-  const handleDragEnd = ({ active, over }: any) => {
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (!over) return;
 
     if (active.id !== over.id) {

@@ -22,7 +22,8 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ blog, onClose, onDelete }) =>
           ✖
         </button>
         <h2 className="text-lg font-bold mb-4 text-center">
-          ¿Estás seguro de eliminar el blog "{blog.titulo}"?
+          ¿Estás seguro de eliminar el blog &quot;{blog.titulo}&quot;?
+
         </h2>
         <div className="flex justify-between">
           <button

@@ -2,8 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ProductGridProduct } from "@/producto/components/ProductGridProduct";
 import { ResponsiveSlideShow } from "@/producto/components/ResonsiveSlideShow";
-import { Precio } from "@/seccion/componentes/Precio";
-import { AddToCart } from "@/producto/components/AddToCart"; // Asegúrate de que este componente sea un Client Component
+import { AddToCart } from "@/producto/components/AddToCart";
 import { getProductBySlug } from "@/producto/actions/getProductBySlug";
 
 interface Props {
@@ -14,7 +13,7 @@ interface Props {
 
 // Generar metadatos dinámicos basados en el producto
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const slug = await params?.slug; // Asegúrate de que params sea esperado como objeto resolviendo sus propiedades
+  const { slug } = params; // Accede directamente a la propiedad slug sin await
 
   const { product } = await getProductBySlug(slug);
 
@@ -50,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 // Página principal del producto
 export default async function ProductPage({ params }: Props) {
-  const slug = await params?.slug; // Asegúrate de esperar la resolución de params
+  const { slug } = params; // Correcto, no se necesita await
 
   // Obtener el producto y productos similares desde la acción
   const { product, similarProducts } = await getProductBySlug(slug);
@@ -69,14 +68,10 @@ export default async function ProductPage({ params }: Props) {
 
         {/* Detalles del producto */}
         <div className="flex flex-col space-y-6 md:space-y-4 md:flex-grow">
-
-
           {/* Botón de agregar al carrito */}
           <div>
             <AddToCart product={product} />
           </div>
-
-          
         </div>
       </div>
 

@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import { Pie } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, TooltipItem } from "chart.js";
 import { Transaction } from "@/transacciones/interfaces/types";
-import { addDays, subDays, startOfMonth, startOfYear, isAfter, isBefore } from "date-fns";
+import { subDays, startOfMonth, startOfYear, isAfter, isBefore } from "date-fns";
 import { RubikFont, Sour_Gummy_Font } from "@/config/fonts";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -84,7 +84,7 @@ const GraficosTransacciones: React.FC<GraficosTransaccionesProps> = ({ transacti
         plugins: {
             tooltip: {
                 callbacks: {
-                    label: (context: any) => {
+                    label: (context: TooltipItem<"pie">) => {
                         const value = context.raw as number;
                         const total = context.dataset.data.reduce((sum: number, val: number) => sum + val, 0);
                         const porcentaje = ((value / total) * 100).toFixed(2);

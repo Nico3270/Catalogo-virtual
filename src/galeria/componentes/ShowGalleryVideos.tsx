@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   DndContext,
   closestCenter,
   PointerSensor,
   useSensor,
   useSensors,
+  DragEndEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -38,7 +39,7 @@ const ShowGalleryVideos: React.FC<ShowGalleryVideosProps> = ({ initialVideos }) 
 
   const sensors = useSensors(useSensor(PointerSensor));
 
-  const handleDragEnd = async ({ active, over }: any) => {
+  const handleDragEnd = async ({ active, over }: DragEndEvent) => {
     if (!over) return;
 
     if (active.id !== over.id) {

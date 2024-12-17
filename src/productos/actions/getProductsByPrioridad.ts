@@ -34,13 +34,13 @@ export const getProductsByPriority = async ({
     ]);
 
     // Formatea los productos para que coincidan con la interfaz Product
-    const formattedProducts: Product[] = products.map((product: any) => ({
+    const formattedProducts: Product[] = products.map((product) => ({
       id: product.id,
       nombre: product.nombre,
       precio: product.precio,
-      imagenes: product.imagenes.map((img: { url: string }) => img.url), // Extraer las URLs de las imágenes
+      imagenes: product.imagenes.map((img) => img.url), // Extraer las URLs de las imágenes
       descripcion: product.descripcion,
-      seccionIds: product.secciones.map((s: { sectionId: string }) => s.sectionId), // Extraer los IDs de las secciones
+      seccionIds: product.secciones.map((s) => s.sectionId), // Extraer los IDs de las secciones
       descripcionCorta: product.descripcionCorta || "",
       slug: product.slug,
       tags: product.tags,

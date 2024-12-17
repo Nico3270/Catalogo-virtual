@@ -154,9 +154,9 @@ export default function ModifyProduct({ product, allSections }: ModifyProductPro
       prev.map((img) =>
         img.id === id
           ? {
-              ...img,
-              toDelete: true,
-            }
+            ...img,
+            toDelete: true,
+          }
           : img
       )
     );

@@ -1,17 +1,4 @@
 
-import { FaBirthdayCake, FaGift, } from "react-icons/fa";
-import { GiBearFace, GiChocolateBar, GiFlowers, GiPartyPopper } from "react-icons/gi";
-import { IoIosRestaurant } from "react-icons/io";
-import { IoWoman } from "react-icons/io5";
-import { MdFreeBreakfast, MdOutlineMan } from "react-icons/md";
-import { TbMoodKid } from "react-icons/tb";
-import * as FaIcons from "react-icons/fa";
-import * as IoIcons from "react-icons/io";
-import * as GiIcons from "react-icons/gi";
-import * as MdIcons from "react-icons/md";
-
-
-
 export interface Product {
   id: string;
   nombre: string;

@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper as SwiperCore } from "swiper"; // Importa el tipo SwiperCore
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -19,7 +20,7 @@ const CarruselVideoGallery: React.FC<CarruselVideoGalleryProps> = ({ videos }) =
   );
 
   // Manejar el cambio de slide
-  const handleSlideChange = (swiper: any) => {
+  const handleSlideChange = (swiper: SwiperCore) => {
     videoRefs.current.forEach((video, index) => {
       if (video) {
         if (index === swiper.activeIndex) {
@@ -124,6 +125,5 @@ const getYouTubeID = (url: string): string | null => {
   }
   return null; // Devuelve null si no se encuentra un ID válido
 };
-
 
 export default CarruselVideoGallery;

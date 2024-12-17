@@ -1,7 +1,6 @@
 "use client";
 
 import { useCartCatalogoStore } from "@/store/carro/carro-store";
-import { useRouter } from "next/navigation";
 import { Precio } from "@/seccion/componentes/Precio";
 import { useEffect, useState } from "react";
 import { useAddressStore } from "@/store/address/address-store";
@@ -14,7 +13,6 @@ export default function OrderCheckoutSummary() {
   const totalItems = useCartCatalogoStore((state) => state.getTotalItems());
   const totalPrice = useCartCatalogoStore((state) => state.getTotalPrice());
   const address = useAddressStore((state) => state.address);
-  const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {

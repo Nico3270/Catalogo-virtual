@@ -5,6 +5,7 @@ import { updateGalleryImage } from "@/galeria/actions/updateGalleryImage";
 import { deleteImage } from "@/galeria/actions/deleteImage";
 import { ImageGalleryItem } from "@/galeria/interfaces/types";
 import { FiTrash2, FiEdit } from "react-icons/fi";
+import Image from "next/image";
 
 interface ModifyGalleryImageProps {
   initialImage: ImageGalleryItem;
@@ -58,7 +59,7 @@ const ModifyGalleryImage: React.FC<ModifyGalleryImageProps> = ({ initialImage })
   return (
     <div className="w-full max-w-xl mx-auto bg-white shadow-md rounded-lg p-6">
       <h1 className="text-2xl font-bold mb-6 text-center">Modificar Imagen</h1>
-      <img
+      <Image
         src={formData.url}
         alt={formData.title}
         className="w-full h-48 object-cover rounded-lg mb-6"

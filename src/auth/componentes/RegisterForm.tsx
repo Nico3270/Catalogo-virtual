@@ -54,9 +54,9 @@ export const RegisterForm = () => {
         setErrorMessage("No se pudo completar el inicio de sesión con Google");
         setIsPending(false); // Terminar estado de carga si hay error
       }
-    } catch (error) {
+    } catch {
       setErrorMessage("No se pudo completar el inicio de sesión con Google");
-      setIsPending(false); // Terminar estado de carga si hay error
+      setIsPending(false);
     }
   };
 

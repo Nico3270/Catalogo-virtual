@@ -4,13 +4,12 @@ import { getProductsCarruselBySlug } from "@/producto/actions/getProductsCarruse
 import { ProductsCarrusel } from "@/producto/components/ProductsCarrusel";
 
 
-interface BlogPageProps {
-  params: { slug: string };
-}
 
-export default async function BlogPage({ params }: BlogPageProps) {
+export default async function BlogPage({ params }: { params: { slug: string } }) {
+  const { slug } = params;
+
   // Obtener el artículo desde la base de datos
-  const article = await getArticleInformation(params.slug);
+  const article = await getArticleInformation(slug);
 
   // Manejar el caso donde no se encuentre el artículo
   if (!article) {
@@ -18,7 +17,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
   }
 
   // Obtener productos relacionados
-  const products = await getProductsCarruselBySlug(params.slug);
+  const products = await getProductsCarruselBySlug(slug);
 
   return (
     <div>
@@ -30,3 +29,4 @@ export default async function BlogPage({ params }: BlogPageProps) {
     </div>
   );
 }
+

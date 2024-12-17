@@ -2,7 +2,7 @@
 
 import { RubikFont } from "@/config/fonts";
 import React from "react";
-import { FaWhatsapp, FaFacebookF, FaInstagram, FaTiktok, FaMapMarkerAlt } from "react-icons/fa";
+import { FaWhatsapp, FaFacebookF, FaInstagram, FaTiktok } from "react-icons/fa";
 
 const RedesSocialesContact: React.FC = () => {
   const direccion = "Carrera 9A # 7-03 Sur, Tunja"; // Cambia esto por tu dirección

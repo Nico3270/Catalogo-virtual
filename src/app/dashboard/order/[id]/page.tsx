@@ -7,7 +7,8 @@ interface Props {
 }
 
 export default async function OrderPage({ params }: Props) {
-  const id = params?.id; // Asegúrate de que `params` exista antes de desestructurar
+  // Asegúrate de esperar los params usando `await` 
+  const { id } = await Promise.resolve(params);
 
   if (!id) {
     return (
@@ -29,13 +30,16 @@ export default async function OrderPage({ params }: Props) {
     );
   }
 
-  // Asegúrate de que `result.order` y `result.statusHistory` están definidos
   const order = result.order;
   const statusHistory = result.statusHistory;
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className={`text-3xl font-bold text-center mb-6 ${RubikFont.className} text-[#D91656]`}>Detalle de la Orden</h1>
+      <h1
+        className={`text-3xl font-bold text-center mb-6 ${RubikFont.className} text-[#D91656]`}
+      >
+        Detalle de la Orden
+      </h1>
       <ShowInformationOrder order={order} statusHistory={statusHistory} />
     </div>
   );

@@ -39,7 +39,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="rounded-lg object-cover"
             onMouseEnter={() => setDisplayImage(product.imagenes[0])}
-            onMouseLeave={() => setDisplayImage(product.imagenes[0])}
+            onMouseLeave={() => setDisplayImage(product.imagenes[1])}
           />
         </div>
       </Link>

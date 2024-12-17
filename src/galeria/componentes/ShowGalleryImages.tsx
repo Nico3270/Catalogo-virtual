@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState} from "react";
 import {
   DndContext,
   closestCenter,
   PointerSensor,
   useSensor,
   useSensors,
+  DragEndEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -14,6 +15,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import Link from "next/link";
+import Image from "next/image";
 import { ImageGalleryItem } from "../interfaces/types";
 import { addNewImage } from "@/galeria/actions/addNewImage";
 import { updateImagesOrder } from "@/galeria/actions/updateImagesOrder";
@@ -38,7 +40,7 @@ const ShowGalleryImages: React.FC<ShowGalleryImagesProps> = ({ initialImages }) 
 
   const sensors = useSensors(useSensor(PointerSensor));
 
-  const handleDragEnd = async ({ active, over }: any) => {
+  const handleDragEnd = async ({ active, over }: DragEndEvent) => {
     if (!over) return;
 
     if (active.id !== over.id) {
@@ -85,7 +87,7 @@ const ShowGalleryImages: React.FC<ShowGalleryImagesProps> = ({ initialImages }) 
           setNewImage({ id: "", url: "", title: "", description: "", order: images.length + 2 });
           alert("Imagen agregada con éxito.");
         } else {
-          console.error(response|| "Error al agregar la imagen.");
+          console.error(response || "Error al agregar la imagen.");
         }
       } catch (error) {
         console.error("Error al agregar la imagen:", error);
@@ -155,7 +157,13 @@ const ShowGalleryImages: React.FC<ShowGalleryImagesProps> = ({ initialImages }) 
                     <FiMove className="text-gray-500" />
                   </td>
                   <td className="p-2 border">
-                    <img src={image.url} alt={image.title} className="h-16 w-16 object-cover" />
+                    <Image
+                      src={image.url}
+                      alt={image.title}
+                      width={64}
+                      height={64}
+                      className="object-cover rounded"
+                    />
                   </td>
                   <td className="p-2 border">{image.title}</td>
                   <td className="p-2 border">{image.description}</td>

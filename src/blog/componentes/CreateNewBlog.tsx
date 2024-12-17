@@ -23,7 +23,7 @@ export interface FormValues {
 
 const CreateNewBlog: React.FC<{
   secciones: Section[];
-  onSubmit: (data: FormValues) => Promise<any>; // Se acepta cualquier tipo de promesa
+  onSubmit: (data: FormValues) => Promise<void>; // Se acepta cualquier tipo de promesa
 }> = ({ secciones, onSubmit }) => {
   const {
     register,
@@ -61,9 +61,9 @@ const CreateNewBlog: React.FC<{
 
   const handleFormSubmit = async (data: FormValues) => {
     try {
-      const result = await onSubmit(data); // Llama a la función pasada como prop
+      await onSubmit(data); // Llama a la función pasada como prop
       alert("¡Blog creado con éxito!");
-      console.log("Resultado del servidor:", result); // Muestra el resultado devuelto por el servidor
+      
     } catch (error) {
       console.error("Error al crear el blog:", error);
       alert("Hubo un error al crear el blog.");

@@ -4,6 +4,7 @@ import { Product } from "@/interfaces/product.interface";
 import React, { useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Image from "next/image";
 
 interface ProductsDashboardProps {
   initialData: {
@@ -47,11 +48,14 @@ export const ProductsDashboard = ({ initialData, fetchProducts }: ProductsDashbo
           {products.map((product) => (
             <tr key={product.id} className="border-b hover:bg-gray-50">
               <td className="p-4">
-                <img
-                  src={product.imagenes[0]}
+                <Image
+                  src={product.imagenes[0] || "/imgs/imagen-prueba.webp"} // Imagen predeterminada
                   alt={product.nombre}
-                  className="w-16 h-16 rounded-md object-cover"
+                  width={64}  // Ancho fijo
+                  height={64} // Alto fijo
+                  className="rounded-md object-cover"
                 />
+
               </td>
               <td className="p-4">{product.nombre}</td>
               <td className="p-4">${product.precio.toFixed(2)}</td>

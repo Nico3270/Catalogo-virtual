@@ -1,4 +1,6 @@
-import {Inter, Montserrat_Alternates, Nunito, Protest_Guerrilla, Playfair_Display, Merriweather, Raleway, Abril_Fatface, Pacifico, Poppins, Source_Code_Pro, Sour_Gummy, Lilita_One, Delius_Swash_Caps, Funnel_Sans, Rubik_Gemstones, Chewy, Oldenburg, Roboto, Lato} from "next/font/google";
+import {Inter, Montserrat_Alternates, Nunito, Protest_Guerrilla, Playfair_Display, Merriweather, 
+    Raleway, Abril_Fatface, Pacifico, Poppins, Source_Code_Pro, Sour_Gummy, Lilita_One,
+     Delius_Swash_Caps, Funnel_Sans, Rubik_Gemstones,  Oldenburg, Roboto, Lato} from "next/font/google";
 
 export const inter = Inter({subsets: ['latin']});
 

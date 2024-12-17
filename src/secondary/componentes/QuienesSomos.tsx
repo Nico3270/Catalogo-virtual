@@ -1,6 +1,6 @@
 "use client";
 
-import { DeliusFont, FunelSansFont, OldenburgFont, RubikFont } from "@/config/fonts";
+import { DeliusFont,  OldenburgFont, RubikFont } from "@/config/fonts";
 import React from "react";
 
 

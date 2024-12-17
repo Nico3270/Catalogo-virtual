@@ -3,9 +3,20 @@
 import { useState } from "react";
 import { changeUserRole } from "../actions/changeUserRole";
 
+// Define la interfaz para el tipo de usuario
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: "admin" | "user";
+}
 
-export function ShowUsersInformation({ users }: { users: any[] }) {
-  const [usersData, setUsersData] = useState(users);
+interface ShowUsersInformationProps {
+  users: User[];
+}
+
+export function ShowUsersInformation({ users }: ShowUsersInformationProps) {
+  const [usersData, setUsersData] = useState<User[]>(users);
 
   const handleChangeRole = async (userId: string, currentRole: "admin" | "user") => {
     const newRole = currentRole === "admin" ? "user" : "admin";

@@ -19,38 +19,61 @@ export interface AdaptedArticulo {
 
 const ModifyBlogComponent: React.FC<{
   blog: AdaptedArticulo;
-  onSubmit: (data: any) => Promise<void>;
+  onSubmit: (data: Omit<AdaptedArticulo, "imagenes" | "parrafos" | "subtitulos"> & {
+    imagenes: string[];
+    parrafos: string[];
+    subtitulos: string[];
+  }) => Promise<void>;
 }> = ({ blog, onSubmit }) => {
   const { register, control, handleSubmit, formState: { errors } } = useForm<AdaptedArticulo>({
-    defaultValues: blog,
+    defaultValues: {
+      id: blog.id || "",
+      titulo: blog.titulo || "",
+      descripcion: blog.descripcion || "",
+      imagen: blog.imagen || "",
+      imagenes: blog.imagenes?.length ? blog.imagenes : [{ url: "" }],
+      parrafos: blog.parrafos?.length ? blog.parrafos : [{ texto: "" }],
+      subtitulos: blog.subtitulos?.length ? blog.subtitulos : [{ texto: "" }],
+      autor: blog.autor || "",
+      orden: blog.orden || 0,
+      secciones: blog.secciones || [],
+    },
   });
 
-  const { fields: imagenFields, append: appendImagen, remove: removeImagen } =
-    useFieldArray({ control, name: "imagenes" });
+  const { fields: imagenFields, append: appendImagen, remove: removeImagen } = useFieldArray({
+    control,
+    name: "imagenes",
+  });
 
-  const { fields: parrafoFields, append: appendParrafo, remove: removeParrafo } =
-    useFieldArray({ control, name: "parrafos" });
+  const { fields: parrafoFields, append: appendParrafo, remove: removeParrafo } = useFieldArray({
+    control,
+    name: "parrafos",
+  });
 
   const { fields: subtituloFields, append: appendSubtitulo, remove: removeSubtitulo } =
-    useFieldArray({ control, name: "subtitulos" });
+    useFieldArray({
+      control,
+      name: "subtitulos",
+    });
 
-    const handleFormSubmit = async (data: AdaptedArticulo) => {
-      console.log("Datos enviados desde el formulario:", data);
-      const formattedData = {
-        ...data,
-        imagenes: data.imagenes.map((img) => img.url),
-        parrafos: data.parrafos.map((p) => p.texto),
-        subtitulos: data.subtitulos.map((s) => s.texto),
-      };
-      console.log("Datos formateados:", formattedData);
-      await onSubmit(formattedData);
+  // Transforma los datos antes de enviarlos
+  const handleFormSubmit = async (data: AdaptedArticulo) => {
+    const formattedData = {
+      ...data,
+      imagenes: data.imagenes.map((img) => img.url), // Extraer solo las URLs
+      parrafos: data.parrafos.map((p) => p.texto), // Extraer solo los textos
+      subtitulos: data.subtitulos.map((s) => s.texto), // Extraer solo los textos
     };
+
+    
+    await onSubmit(formattedData);
+  };
 
   return (
     <form
-  onSubmit={handleSubmit(handleFormSubmit)}
-  className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 space-y-6 pb-20"
->
+      onSubmit={handleSubmit(handleFormSubmit)}
+      className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 space-y-6 pb-20"
+    >
       <h1 className="text-2xl font-bold text-center">Modificar Blog</h1>
 
       {/* Título */}
@@ -72,7 +95,6 @@ const ModifyBlogComponent: React.FC<{
           className="w-full border rounded p-2"
           placeholder="Descripción breve del blog"
         />
-        {errors.descripcion && <p className="text-red-500">{errors.descripcion.message}</p>}
       </div>
 
       {/* Imagen Principal */}
@@ -83,7 +105,6 @@ const ModifyBlogComponent: React.FC<{
           className="w-full border rounded p-2"
           placeholder="URL de la imagen principal"
         />
-        {errors.imagen && <p className="text-red-500">{errors.imagen.message}</p>}
       </div>
 
       {/* Imágenes Adicionales */}
@@ -96,20 +117,12 @@ const ModifyBlogComponent: React.FC<{
               className="w-full border rounded p-2"
               placeholder={`URL de la imagen ${index + 1}`}
             />
-            <button
-              type="button"
-              onClick={() => removeImagen(index)}
-              className="text-red-500"
-            >
+            <button type="button" onClick={() => removeImagen(index)} className="text-red-500">
               <FaTrashAlt />
             </button>
           </div>
         ))}
-        <button
-          type="button"
-          onClick={() => appendImagen({ url: "" })}
-          className="text-[#D91656] flex items-center"
-        >
+        <button type="button" onClick={() => appendImagen({ url: "" })} className="text-[#D91656]">
           <FaPlus className="mr-2" /> Añadir Imagen
         </button>
       </div>
@@ -124,20 +137,12 @@ const ModifyBlogComponent: React.FC<{
               className="w-full border rounded p-2"
               placeholder={`Párrafo ${index + 1}`}
             />
-            <button
-              type="button"
-              onClick={() => removeParrafo(index)}
-              className="text-red-500"
-            >
+            <button type="button" onClick={() => removeParrafo(index)} className="text-red-500">
               <FaTrashAlt />
             </button>
           </div>
         ))}
-        <button
-          type="button"
-          onClick={() => appendParrafo({ texto: "" })}
-          className="text-[#D91656] flex items-center"
-        >
+        <button type="button" onClick={() => appendParrafo({ texto: "" })} className="text-[#D91656]">
           <FaPlus className="mr-2" /> Añadir Párrafo
         </button>
       </div>
@@ -152,20 +157,12 @@ const ModifyBlogComponent: React.FC<{
               className="w-full border rounded p-2"
               placeholder={`Subtítulo ${index + 1}`}
             />
-            <button
-              type="button"
-              onClick={() => removeSubtitulo(index)}
-              className="text-red-500"
-            >
+            <button type="button" onClick={() => removeSubtitulo(index)} className="text-red-500">
               <FaTrashAlt />
             </button>
           </div>
         ))}
-        <button
-          type="button"
-          onClick={() => appendSubtitulo({ texto: "" })}
-          className="text-[#D91656] flex items-center"
-        >
+        <button type="button" onClick={() => appendSubtitulo({ texto: "" })} className="text-[#D91656]">
           <FaPlus className="mr-2" /> Añadir Subtítulo
         </button>
       </div>
@@ -189,24 +186,6 @@ const ModifyBlogComponent: React.FC<{
           className="w-full border rounded p-2"
           placeholder="Nombre del autor"
         />
-        {errors.autor && <p className="text-red-500">{errors.autor.message}</p>}
-      </div>
-
-      {/* Secciones */}
-      <div>
-        <label className="block font-bold mb-1">Secciones</label>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {blog.secciones.map((seccion) => (
-            <label key={seccion.id} className="flex items-center space-x-2">
-              <input
-                {...register("secciones", { required: "Selecciona al menos una sección" })}
-                type="checkbox"
-                value={seccion.id}
-              />
-              <span>{seccion.nombre}</span>
-            </label>
-          ))}
-        </div>
       </div>
 
       {/* Botón de Guardar */}

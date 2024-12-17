@@ -112,6 +112,14 @@ export const ShowOrders = ({ orders, totalOrders, ordersPerPage }: ShowOrdersPro
 
   return (
     <div className="container mx-auto p-4 bg-white rounded-md shadow-md">
+
+      {/* Encabezado con total de órdenes */}
+      <div className="mb-6 text-center">
+        <h1 className="text-2xl font-bold">Órdenes de Compra</h1>
+        <p className="text-gray-600">
+          Mostrando {filteredOrders.length} de {totalOrders} órdenes
+        </p>
+      </div>
       {/* Filtros */}
       <div className="mb-6">
         <div className="hidden md:flex flex-wrap justify-around gap-4">

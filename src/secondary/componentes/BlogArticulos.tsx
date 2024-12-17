@@ -1,6 +1,7 @@
 "use client";
 
 import { LatoFont, RubikFont, Sour_Gummy_Font } from "@/config/fonts";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -58,9 +59,11 @@ const BlogArticulos: React.FC<Props> = ({ articulos }) => {
             <Link href={`/blog/${articulo.slug}`}>
               {/* Imagen */}
               <div className="relative w-full h-40 mb-4">
-                <img
+                <Image
                   src={articulo.imagen}
                   alt={articulo.titulo}
+                  width={300} // Especifica un ancho adecuado
+                  height={160} // Especifica una altura adecuada
                   className="w-full h-full object-cover rounded-t-lg"
                 />
               </div>

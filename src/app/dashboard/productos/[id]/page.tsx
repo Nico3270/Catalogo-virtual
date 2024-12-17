@@ -9,6 +9,11 @@ interface ProductPageProps {
 // Define los valores válidos para status
 const validStatuses = ["available", "out_of_stock", "discontinued"] as const;
 
+// Type guard para verificar si el status es válido
+function isValidStatus(status: string): status is typeof validStatuses[number] {
+  return validStatuses.includes(status as unknown as typeof validStatuses[number]);
+}
+
 export default async function ProductPage({ params }: ProductPageProps) {
   const { id } = params;
 
@@ -18,10 +23,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
     return notFound();
   }
 
-  // Mapear el status al tipo restringido
-  const status = validStatuses.includes(data.product.status as any)
-    ? (data.product.status as "available" | "out_of_stock" | "discontinued")
-    : undefined;
+  // Validar el status usando el type guard
+  const status = isValidStatus(data.product.status) ? data.product.status : undefined;
 
   const product = {
     ...data.product,

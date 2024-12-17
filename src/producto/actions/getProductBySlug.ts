@@ -27,9 +27,9 @@ export const getProductBySlug = async (slug: string): Promise<{
       id: product.id,
       nombre: product.nombre,
       precio: product.precio,
-      imagenes: product.imagenes.map((img: { url: string }) => img.url), // Especifica el tipo de `img`
+      imagenes: product.imagenes.map((img: { url: string }) => img.url),
       descripcion: product.descripcion,
-      seccionIds: product.secciones.map((s: { sectionId: string }) => s.sectionId), // Especifica el tipo de `s`
+      seccionIds: product.secciones.map((s: { sectionId: string }) => s.sectionId),
       descripcionCorta: product.descripcionCorta || "",
       slug: product.slug,
       tags: product.tags,
@@ -44,26 +44,26 @@ export const getProductBySlug = async (slug: string): Promise<{
       where: {
         secciones: {
           some: {
-            sectionId: product.secciones[0]?.sectionId, // Basado en la primera sección asociada
+            sectionId: product.secciones[0]?.sectionId,
           },
         },
-        NOT: { id: product.id }, // Excluir el producto actual
+        NOT: { id: product.id },
       },
       include: {
-        imagenes: true, // Incluir imágenes de los productos similares
-        secciones: true, // Incluir secciones relacionadas
+        imagenes: true,
+        secciones: true,
       },
-      take: 8, // Limitar a 8 productos similares
+      take: 8,
     });
 
-    // Formatear productos similares
-    const similarProducts: Product[] = similarProductsData.map((simProd: any) => ({
+    // Usar el tipo inferido de Prisma
+    const similarProducts: Product[] = similarProductsData.map((simProd) => ({
       id: simProd.id,
       nombre: simProd.nombre,
       precio: simProd.precio,
-      imagenes: simProd.imagenes.map((img: { url: string }) => img.url), // Especifica el tipo de `img`
+      imagenes: simProd.imagenes.map((img) => img.url),
       descripcion: simProd.descripcion,
-      seccionIds: simProd.secciones?.map((s: { sectionId: string }) => s.sectionId) || [], // Especifica el tipo de `s`
+      seccionIds: simProd.secciones?.map((s) => s.sectionId) || [],
       descripcionCorta: simProd.descripcionCorta || "",
       slug: simProd.slug,
       tags: simProd.tags,
