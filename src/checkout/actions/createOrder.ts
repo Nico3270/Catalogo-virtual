@@ -28,9 +28,9 @@ export const createOrder = async (data: CreateOrderInput) => {
   try {
     const { cartItems, address } = data;
 
-    // Crear la transacción en la base de datos con el tipo correcto para `tx`
+    console.log("Datos recibidos para crear orden:", { cartItems, address }); // Log para depurar
+
     const createdOrder = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      // Crear los datos de entrega
       const deliveryData = await tx.deliveryData.create({
         data: {
           senderName: address.senderName,
@@ -46,10 +46,11 @@ export const createOrder = async (data: CreateOrderInput) => {
         },
       });
 
-      // Crear la orden
+      console.log("Datos de entrega creados:", deliveryData); // Log para confirmar
+
       const order = await tx.order.create({
         data: {
-          estado: OrderState.RECIBIDA, // Estado predeterminado
+          estado: OrderState.RECIBIDA,
           datosDeEntrega: {
             connect: { id: deliveryData.id },
           },
@@ -65,16 +66,17 @@ export const createOrder = async (data: CreateOrderInput) => {
           },
         },
         include: {
-          items: true, // Incluir los items en la respuesta
+          items: true,
         },
       });
 
-      // Crear el historial inicial del estado
+      console.log("Orden creada:", order); // Log para confirmar
+
       await tx.orderStatusHistory.create({
         data: {
           orderId: order.id,
-          previousState: null, // No hay estado previo, ya que es la creación inicial
-          newState: OrderState.RECIBIDA, // Estado inicial
+          previousState: null,
+          newState: OrderState.RECIBIDA,
           comment: "Orden creada y marcada como recibida automáticamente.",
         },
       });

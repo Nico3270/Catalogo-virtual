@@ -1,10 +1,11 @@
 import { getOrders } from "@/orders/actions/getOrderss";
 import { ShowOrders } from "@/orders/componentes/ShowOrders";
 
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 
 export default async function OrdersPage() {
   const { orders, totalOrders, ordersPerPage } = await getOrders();
-  console.log(orders);
+  
   
 
   return (

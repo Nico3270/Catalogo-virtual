@@ -6,9 +6,10 @@ import { useEffect, useState } from "react";
 import { useAddressStore } from "@/store/address/address-store";
 import { createOrder } from "@/checkout/actions/createOrder";
 import { BsWhatsapp } from "react-icons/bs";
-
+import { useRouter } from "next/navigation"; // Importar el router
 
 export default function OrderCheckoutSummary() {
+  const router = useRouter(); // Inicializar el router
   const cartItems = useCartCatalogoStore((state) => state.cart);
   const totalItems = useCartCatalogoStore((state) => state.getTotalItems());
   const totalPrice = useCartCatalogoStore((state) => state.getTotalPrice());
@@ -63,6 +64,7 @@ Gracias por tu compra!`;
 
     if (response.success) {
       console.log("Orden creada exitosamente:", response.order);
+      router.refresh();
 
       // Abrir WhatsApp
       const whatsappURL = `https://wa.me/573182293083?text=${encodeURIComponent(message)}`;

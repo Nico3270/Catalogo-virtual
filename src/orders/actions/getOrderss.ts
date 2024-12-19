@@ -1,7 +1,9 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { OrderState } from "@prisma/client"; // Importa el enum para usarlo en las órdenes
+import { OrderState } from "@prisma/client";
+
+
 
 export const getOrders = async (page: number = 1, ordersPerPage: number = 12) => {
   try {
