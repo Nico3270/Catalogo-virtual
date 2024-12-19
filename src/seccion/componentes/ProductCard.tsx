@@ -58,14 +58,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
       {/* Información del producto */}
       <div className="mt-4">
-        <h3 className={`text-lg font-bold text-[#D91656] ${Sour_Gummy_Font.className}`}>{product.nombre}</h3>
+        <Link href={`/producto/${product.slug}`}>
+          <h3 className={`text-lg font-bold text-[#D91656] ${Sour_Gummy_Font.className}`}>{product.nombre}</h3>
+        </Link>
         <p className={`text-lg font-bold text-[#640D5F] ${LatoFont.className}`}>
           {product.descripcion.length > 80
             ? `${product.descripcion.substring(0, 80)}...`
             : product.descripcion}
           {product.descripcion.length > 80 && (
             <Link
-              href={`/product/${product.slug}`}
+              href={`/producto/${product.slug}`}
               className="text-red-500 hover:underline ml-1"
             >
               Ver más

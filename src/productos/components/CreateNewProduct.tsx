@@ -110,7 +110,7 @@ export default function CreateNewProduct({ allSections }: CreateNewProductProps)
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 bg-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto">
-      <h2 className="text-3xl font-bold text-center mb-6">Crear Nuevo Producto</h2>
+      
 
       <TextField label="Nombre" {...register("nombre", { required: true })} fullWidth />
       <TextField label="Precio" type="number" {...register("precio", { required: true })} fullWidth />
