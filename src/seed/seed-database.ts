@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { initialData } from "./seed";
+import bcryptjs from "bcryptjs"; // Importa bcryptjs para encriptar la contraseña
 
 const prisma = new PrismaClient();
 
@@ -17,7 +18,8 @@ async function main() {
       await prisma.productSection.deleteMany();
       await prisma.section.deleteMany();
       await prisma.product.deleteMany();
-      await prisma.articulo.deleteMany(); // Eliminar artículos existentes
+      await prisma.articulo.deleteMany();
+      await prisma.user.deleteMany(); // Eliminar usuarios existentes
     }
 
     // Insertar secciones
@@ -29,15 +31,14 @@ async function main() {
           id: section.id,
           nombre: section.name,
           slug: section.href,
-          iconName: section.iconName, // Nombre del ícono
-          order: section.order, // Orden o prioridad
-          isActive: section.isActive, // Estado activo/inactivo
+          iconName: section.iconName,
+          order: section.order,
+          isActive: section.isActive,
         },
       });
       sectionMap[section.id] = createdSection.id;
     }
 
-    // Crear un conjunto para almacenar slugs únicos
     const slugSet = new Set<string>();
 
     // Insertar productos e imágenes
@@ -45,14 +46,11 @@ async function main() {
     for (const product of initialData.products) {
       let uniqueSlug = product.slug;
 
-      // Asegurarse de que el slug sea único
       let counter = 1;
       while (slugSet.has(uniqueSlug)) {
         uniqueSlug = `${product.slug}-${counter}`;
         counter++;
       }
-
-      // Agregar el slug único al conjunto
       slugSet.add(uniqueSlug);
 
       const createdProduct = await prisma.product.create({
@@ -62,25 +60,23 @@ async function main() {
           precio: product.precio,
           descripcion: product.descripcion,
           descripcionCorta: product.descripcionCorta || null,
-          slug: uniqueSlug, // Usar el slug único
+          slug: uniqueSlug,
           prioridad: product.prioridad || null,
           status: product.status || "available",
           tags: product.tags,
           secciones: {
             create: product.seccionIds.map((seccionId) => ({
-              sectionId: sectionMap[seccionId], // Conectar a la sección correspondiente
+              sectionId: sectionMap[seccionId],
             })),
           },
         },
       });
 
-      // Insertar imágenes relacionadas con el producto
-      console.log(`Insertando imágenes para el producto: ${product.nombre}`);
       for (const imageUrl of product.imagenes) {
         await prisma.image.create({
           data: {
             url: imageUrl,
-            productId: createdProduct.id, // Relacionar con el producto
+            productId: createdProduct.id,
           },
         });
       }
@@ -91,14 +87,11 @@ async function main() {
     for (const articulo of initialData.articulos) {
       let uniqueSlug = articulo.slug;
 
-      // Asegurarse de que el slug sea único
       let counter = 1;
       while (slugSet.has(uniqueSlug)) {
         uniqueSlug = `${articulo.slug}-${counter}`;
         counter++;
       }
-
-      // Agregar el slug único al conjunto
       slugSet.add(uniqueSlug);
 
       await prisma.articulo.create({
@@ -117,6 +110,19 @@ async function main() {
         },
       });
     }
+
+    // Insertar usuario admin
+    console.log("Insertando usuario administrador...");
+    const hashedPassword = bcryptjs.hashSync("Nicolas3270", 10); // Hashea la contraseña
+
+    await prisma.user.create({
+      data: {
+        name: "Nico",
+        email: "admin1@gmail.com",
+        password: hashedPassword,
+        role: "admin", // Rol de administrador
+      },
+    });
 
     console.log("Datos insertados correctamente");
   } catch (error) {

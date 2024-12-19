@@ -4,6 +4,7 @@ import { ShowOrders } from "@/orders/componentes/ShowOrders";
 
 export default async function OrdersPage() {
   const { orders, totalOrders, ordersPerPage } = await getOrders();
+  console.log(orders);
   
 
   return (
