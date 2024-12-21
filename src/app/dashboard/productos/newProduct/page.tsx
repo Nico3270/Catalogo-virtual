@@ -1,10 +1,10 @@
 import { getSections } from "@/productos/actions/getSections";
 import CreateNewProduct from "@/productos/components/CreateNewProduct";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 export default async function NewProductPage() {
   const allSections = await getSections();
 
-  console.log("Secciones disponibles:", allSections);
+  
 
   return (
     <div className="p-6">

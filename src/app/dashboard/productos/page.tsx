@@ -1,6 +1,6 @@
 import { getProductsToDashboard } from "@/productos/actions/getProductsToDashboard";
 import { ProductsDashboard } from "@/productos/components/ProductsDashboard";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 export default async function ProductsPage() {
   const initialData = await getProductsToDashboard({ page: 1, pageSize: 10 });
 

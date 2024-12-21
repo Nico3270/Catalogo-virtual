@@ -1,7 +1,7 @@
 import { getProductAndSectionToModifyProduct } from "@/productos/actions/getProductAndSectionToModifyProduct";
 import ModifyProduct from "@/productos/components/ModifyProduct";
 import { notFound } from "next/navigation";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 interface ProductPageProps {
   params: Promise<{ id: string }>;
 }

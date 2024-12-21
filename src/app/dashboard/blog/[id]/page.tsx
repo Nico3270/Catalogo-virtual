@@ -1,7 +1,7 @@
 import { getBlogById } from "@/blog/actions/getBlogById";
 import ModifyBlogClientWrapper from "@/blog/componentes/ModifyBlogClientWrapper";
 import { use } from "react";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   // Resolver los parámetros de forma segura
   const { id } = use(params);
