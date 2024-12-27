@@ -30,7 +30,7 @@ const ModifyGalleryVideo: React.FC<ModifyGalleryVideoProps> = ({ initialVideo })
         // Subir nuevo video
         const uploadedUrl = await uploadVideoToCloudinary(file);
 
-        // Eliminar video anterior de Cloudinary usando Server Action
+        // Eliminar video anterior de Cloudinary
         const publicId = formData.url.split('/').pop()?.split('.')[0];
         if (publicId) {
           const deleteResponse = await deleteVideoFromCloudinary(publicId);
@@ -51,13 +51,12 @@ const ModifyGalleryVideo: React.FC<ModifyGalleryVideoProps> = ({ initialVideo })
     }
   };
 
-  // Actualizar video en la base de datos
   const handleUpdate = async () => {
     try {
       const response = await updateGalleryVideo({
         id: initialVideo.id,
         ...formData,
-        order: initialVideo.order, // Mantiene el orden original
+        order: initialVideo.order,
       });
 
       if (response.success) {
@@ -71,12 +70,10 @@ const ModifyGalleryVideo: React.FC<ModifyGalleryVideoProps> = ({ initialVideo })
     }
   };
 
-  // Eliminar video de Cloudinary y base de datos
   const handleDelete = async () => {
     if (confirm("¿Estás seguro de que deseas eliminar este video?")) {
       setDeleting(true);
       try {
-        // Eliminar video de Cloudinary
         const publicId = formData.url.split('/').pop()?.split('.')[0];
         if (publicId) {
           const deleteResponse = await deleteVideoFromCloudinary(publicId);
@@ -85,7 +82,6 @@ const ModifyGalleryVideo: React.FC<ModifyGalleryVideoProps> = ({ initialVideo })
           }
         }
 
-        // Eliminar de la base de datos
         const response = await deleteVideo(initialVideo.id);
 
         if (response.success) {
@@ -112,22 +108,23 @@ const ModifyGalleryVideo: React.FC<ModifyGalleryVideoProps> = ({ initialVideo })
         controls
       />
       <div className="grid grid-cols-1 gap-4">
+        {/* Input oculto para selección de archivo */}
         <input
           type="file"
           accept="video/*"
-          capture="environment"
           onChange={handleFileChange}
           className="hidden"
-          id="fileInput"
+          id="videoFileInput"
         />
 
+        {/* Botón con ícono para subir nuevo video */}
         <button
           type="button"
-          onClick={() => document.getElementById("fileInput")?.click()}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md flex items-center gap-2"
+          onClick={() => document.getElementById("videoFileInput")?.click()}
+          className="flex items-center justify-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-md transition"
         >
-          <FiUploadCloud />
-          Subir Nuevo Video
+          <FiUploadCloud className="text-xl" />
+          {uploading ? "Subiendo video..." : "Seleccionar nuevo video"}
         </button>
 
         <input

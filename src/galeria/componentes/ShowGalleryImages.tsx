@@ -21,7 +21,7 @@ import { addNewImage } from "@/galeria/actions/addNewImage";
 import { updateImagesOrder } from "@/galeria/actions/updateImagesOrder";
 import { uploadImageToCloudinary } from "../actions/uploadImageToCloudinary";
 import { SortableRow } from "./SortableRow";
-import { FiMove } from "react-icons/fi";
+import { FiMove, FiUploadCloud } from "react-icons/fi";
 import { RubikFont } from "@/config/fonts";
 
 interface ShowGalleryImagesProps {
@@ -42,6 +42,7 @@ const ShowGalleryImages: React.FC<ShowGalleryImagesProps> = ({ initialImages }) 
 
   const sensors = useSensors(useSensor(PointerSensor));
 
+  // Manejar subida de imágenes
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -59,6 +60,7 @@ const ShowGalleryImages: React.FC<ShowGalleryImagesProps> = ({ initialImages }) 
     }
   };
 
+  // Agregar nueva imagen
   const handleAddImage = async () => {
     if (newImage.url && newImage.title && newImage.description) {
       try {
@@ -85,6 +87,7 @@ const ShowGalleryImages: React.FC<ShowGalleryImagesProps> = ({ initialImages }) 
     }
   };
 
+  // Manejar reordenamiento de imágenes
   const handleDragEnd = async ({ active, over }: DragEndEvent) => {
     if (!over) return;
 
@@ -131,10 +134,18 @@ const ShowGalleryImages: React.FC<ShowGalleryImagesProps> = ({ initialImages }) 
           <input
             type="file"
             accept="image/*"
-            capture="environment"
+            className="hidden"
+            id="fileInput"
             onChange={handleFileChange}
-            className="border rounded-md p-2"
           />
+          <button
+            type="button"
+            onClick={() => document.getElementById("fileInput")?.click()}
+            className="flex items-center justify-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-md transition"
+          >
+            <FiUploadCloud className="text-xl" />
+            {uploading ? "Subiendo..." : "Seleccionar Imagen"}
+          </button>
           <input
             type="text"
             placeholder="Título"
@@ -164,36 +175,24 @@ const ShowGalleryImages: React.FC<ShowGalleryImagesProps> = ({ initialImages }) 
       {/* Listado de imágenes */}
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={images.map((image) => image.id)} strategy={verticalListSortingStrategy}>
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-200 text-gray-800">
-                <th className="p-2 border">Orden</th>
-                <th className="p-2 border">Imagen</th>
-                <th className="p-2 border">Título</th>
-                <th className="p-2 border">Descripción</th>
-                <th className="p-2 border">Modificar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {images.map((image) => (
-                <SortableRow key={image.id} id={image.id}>
-                  <td className="p-2 border text-center cursor-grab">
-                    <FiMove className="text-gray-500" />
-                  </td>
-                  <td className="p-2 border">
-                    <Image src={image.url} alt={image.title} width={64} height={64} />
-                  </td>
-                  <td className="p-2 border">{image.title}</td>
-                  <td className="p-2 border">{image.description}</td>
-                  <td className="p-2 border text-center">
-                    <Link href={`/dashboard/galleryImages/${image.id}`} className="text-[#EB5B00] hover:underline">
-                      Modificar
-                    </Link>
-                  </td>
-                </SortableRow>
-              ))}
-            </tbody>
-          </table>
+          {images.map((image) => (
+            <SortableRow key={image.id} id={image.id}>
+              <div className="flex items-center gap-4 border-b py-4">
+                <FiMove className="cursor-grab" />
+                <Image src={image.url} alt={image.title} width={64} height={64} className="rounded" />
+                <div>
+                  <p className="font-semibold">{image.title}</p>
+                  <p className="text-sm text-gray-500">{image.description}</p>
+                </div>
+                <Link
+                  href={`/dashboard/galleryImages/${image.id}`}
+                  className="ml-auto text-[#EB5B00] hover:underline"
+                >
+                  Modificar
+                </Link>
+              </div>
+            </SortableRow>
+          ))}
         </SortableContext>
       </DndContext>
 

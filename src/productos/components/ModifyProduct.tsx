@@ -1,5 +1,5 @@
 "use client";
-
+import { MdAddAPhoto } from "react-icons/md";  // Icono de cámara con "+" 
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { modifyProduct } from "@/productos/actions/modifyProduct";
@@ -281,12 +281,14 @@ export default function ModifyProduct({ product, allSections }: ModifyProductPro
             id="fileInput"
           />
 
+          {/* Botón con ícono para abrir el input */}
           <button
             type="button"
             onClick={() => document.getElementById("fileInput")?.click()}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md"
+            className="p-3 rounded-full bg-gray-200 hover:bg-gray-300 transition duration-200"
+            aria-label="Seleccionar imágenes"
           >
-            Seleccionar Imágenes
+            <MdAddAPhoto className="text-3xl text-gray-600" />
           </button>
 
 

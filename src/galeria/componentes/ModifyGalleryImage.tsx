@@ -5,7 +5,7 @@ import { updateGalleryImage } from "@/galeria/actions/updateGalleryImage";
 import { deleteImage } from "@/galeria/actions/deleteImage";
 import { ImageGalleryItem } from "@/galeria/interfaces/types";
 import { uploadImageToCloudinary } from "@/galeria/actions/uploadImageToCloudinary";
-import { FiTrash2, FiEdit } from "react-icons/fi";
+import { FiTrash2, FiEdit, FiCamera } from "react-icons/fi";
 import Image from "next/image";
 
 interface ModifyGalleryImageProps {
@@ -83,6 +83,7 @@ const ModifyGalleryImage: React.FC<ModifyGalleryImageProps> = ({ initialImage })
   return (
     <div className="w-full max-w-xl mx-auto bg-white shadow-md rounded-lg p-6">
       <h1 className="text-2xl font-bold mb-6 text-center">Modificar Imagen</h1>
+      
       <Image
         src={formData.url}
         alt={formData.title}
@@ -90,14 +91,27 @@ const ModifyGalleryImage: React.FC<ModifyGalleryImageProps> = ({ initialImage })
         height={400}
         className="w-full h-48 object-cover rounded-lg mb-6"
       />
+
       <div className="grid grid-cols-1 gap-4">
+        {/* Botón de selección de imagen con ícono */}
         <input
           type="file"
           accept="image/*"
-          capture="environment"
+              multiple
           onChange={handleFileChange}
-          className="border rounded-md p-2"
+          className="hidden"
+          id="fileInput"
         />
+        
+        <button
+          type="button"
+          onClick={() => document.getElementById("fileInput")?.click()}
+          className="flex items-center justify-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-md transition"
+        >
+          <FiCamera className="text-xl" /> 
+          {uploading ? "Subiendo imagen..." : "Seleccionar nueva imagen"}
+        </button>
+
         <input
           type="text"
           placeholder="Título"
@@ -113,6 +127,7 @@ const ModifyGalleryImage: React.FC<ModifyGalleryImageProps> = ({ initialImage })
           className="border rounded-md p-2"
         />
       </div>
+
       <div className="flex justify-between mt-6">
         <button
           onClick={handleUpdate}
@@ -121,6 +136,7 @@ const ModifyGalleryImage: React.FC<ModifyGalleryImageProps> = ({ initialImage })
         >
           <FiEdit /> {uploading ? "Actualizando..." : "Modificar"}
         </button>
+        
         <button
           onClick={handleDelete}
           disabled={deleting}

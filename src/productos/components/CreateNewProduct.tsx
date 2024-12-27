@@ -19,6 +19,7 @@ import {
 import { AiOutlinePlus } from "react-icons/ai";
 import { FaTrashAlt } from "react-icons/fa";
 import Image from "next/image";
+import { MdAddAPhoto } from "react-icons/md";
 
 interface CreateNewProductProps {
   allSections: { id: string; name: string }[];
@@ -182,12 +183,14 @@ export default function CreateNewProduct({ allSections }: CreateNewProductProps)
               id="fileInput"
             />
 
+            {/* Botón con ícono para abrir el input */}
             <button
               type="button"
               onClick={() => document.getElementById("fileInput")?.click()}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              className="p-3 rounded-full bg-gray-200 hover:bg-gray-300 transition duration-200"
+              aria-label="Seleccionar imágenes"
             >
-              Seleccionar Imágenes
+              <MdAddAPhoto className="text-3xl text-gray-600" />
             </button>
 
 
