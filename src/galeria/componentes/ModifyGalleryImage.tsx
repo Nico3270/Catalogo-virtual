@@ -5,7 +5,7 @@ import { updateGalleryImage } from "@/galeria/actions/updateGalleryImage";
 import { deleteImage } from "@/galeria/actions/deleteImage";
 import { ImageGalleryItem } from "@/galeria/interfaces/types";
 import { uploadImageToCloudinary } from "@/galeria/actions/uploadImageToCloudinary";
-import { FiTrash2, FiEdit, FiUploadCloud } from "react-icons/fi";
+import { FiTrash2, FiEdit } from "react-icons/fi";
 import Image from "next/image";
 
 interface ModifyGalleryImageProps {

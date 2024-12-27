@@ -20,6 +20,7 @@ export async function authenticate(
 
     return 'Success';
   } catch (error) {
+    console.error("Error en login:", error);  // Usar error aquí
     const signInError = error as SignInError;
 
     if (signInError.type === "CredentialsSignin") {
@@ -37,6 +38,7 @@ export const login = async (email: string, password: string) => {
     await signIn ("credentials", {email, password});
     return {ok: true}  
   } catch (error) {
+    console.error("Error en login:", error);  // Usar error aquí
     return {ok:false, message:"No se pudo iniciar sesión"}
   }
 }

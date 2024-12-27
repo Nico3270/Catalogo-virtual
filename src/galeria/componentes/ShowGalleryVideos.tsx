@@ -154,9 +154,8 @@ const ShowGalleryVideos: React.FC<ShowGalleryVideosProps> = ({ initialVideos }) 
         <button
           onClick={handleAddVideo}
           disabled={uploading}
-          className={`mt-4 px-4 py-2 rounded-md ${
-            uploading ? "bg-gray-400" : "bg-[#EB5B00] hover:bg-[#FFB200]"
-          } text-white`}
+          className={`mt-4 px-4 py-2 rounded-md ${uploading ? "bg-gray-400" : "bg-[#EB5B00] hover:bg-[#FFB200]"
+            } text-white`}
         >
           {uploading ? "Subiendo..." : "Agregar Video"}
         </button>
@@ -194,6 +193,9 @@ const ShowGalleryVideos: React.FC<ShowGalleryVideosProps> = ({ initialVideos }) 
             </tbody>
           </table>
         </SortableContext>
+        {isSavingOrder && (
+          <p className="text-center text-blue-500 mt-4">Guardando el nuevo orden...</p>
+        )}
       </DndContext>
     </div>
   );
