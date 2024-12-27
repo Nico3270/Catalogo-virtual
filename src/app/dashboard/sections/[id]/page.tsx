@@ -1,6 +1,6 @@
 import { getSectionById } from "@/seccion/actions/getSectionById";
 import { UpdateSection } from "@/seccion/componentes/UpdateSection";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 interface Props {
   params: Promise<{
     id: string;

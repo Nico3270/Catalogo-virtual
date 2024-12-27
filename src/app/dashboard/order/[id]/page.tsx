@@ -1,7 +1,7 @@
 import { RubikFont } from "@/config/fonts";
 import { getOrderById } from "@/order/actions/getOrderById";
 import { ShowInformationOrder } from "@/order/componentes/ShowInformationOrder";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 interface Props {
   params: Promise<{id:string}>
 }

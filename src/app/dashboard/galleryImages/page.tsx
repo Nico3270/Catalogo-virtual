@@ -1,6 +1,6 @@
 import { fetchGalleryImages } from "@/galeria/actions/fetchGalleryImages";
 import ShowGalleryImages from "@/galeria/componentes/ShowGalleryImages";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 const Page = async () => {
   // Obtenemos las imágenes desde la base de datos mediante una action
   const images = await fetchGalleryImages();

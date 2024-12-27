@@ -8,7 +8,7 @@ import { getTransactions } from "@/transacciones/actions/getTransactions";
 import { Transaction } from "@/transacciones/interfaces/types";
 import { FiArrowUp } from "react-icons/fi";
 import { FaChartPie, FaListAlt, FaPlusCircle } from "react-icons/fa";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 const Page = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [showScrollTop, setShowScrollTop] = useState(false);

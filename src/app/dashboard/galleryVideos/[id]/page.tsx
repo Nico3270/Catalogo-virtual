@@ -1,7 +1,7 @@
 import React from "react";
 import { getVideoFromGalleryById } from "@/galeria/actions/getVideoFromGalleryById";
 import ModifyGalleryVideo from "@/galeria/componentes/ModifyGalleryVideo";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 interface Props {
   params: Promise<{ id: string }>;
 }

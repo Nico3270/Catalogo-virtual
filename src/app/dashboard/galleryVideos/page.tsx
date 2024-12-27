@@ -1,6 +1,6 @@
 import { fetchGalleryVideos } from "@/galeria/actions/fetchGalleryVideos";
 import ShowGalleryVideos from "@/galeria/componentes/ShowGalleryVideos";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 const Page = async () => {
   // Obtenemos los videos desde la base de datos mediante una action
   const videos = await fetchGalleryVideos();

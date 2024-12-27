@@ -1,6 +1,6 @@
 import { UpdateOrder } from "@/order/componentes/UpdateOrder";
 import { getInformationByIdUpdateOrder } from "@/orders/actions/getInformationByIdUpdateOrder";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 interface Props {
   params: Promise<{
     id: string; // El ID de la orden
