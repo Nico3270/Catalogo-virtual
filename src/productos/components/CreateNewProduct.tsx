@@ -176,11 +176,20 @@ export default function CreateNewProduct({ allSections }: CreateNewProductProps)
             <input
               type="file"
               accept="image/*"
-              capture="environment"
+              multiple
               onChange={handleAddImage}
               className="hidden"
               id="fileInput"
             />
+
+            <button
+              type="button"
+              onClick={() => document.getElementById("fileInput")?.click()}
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+            >
+              Seleccionar Imágenes
+            </button>
+
 
           </label>
         </Stack>

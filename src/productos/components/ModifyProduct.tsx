@@ -275,21 +275,20 @@ export default function ModifyProduct({ product, allSections }: ModifyProductPro
           <input
             type="file"
             accept="image/*"
-            capture="environment"
             multiple
             onChange={handleAddImage}
             className="hidden"
             id="fileInput"
           />
 
-          <Button
-            variant="contained"
-            component="label"
-            htmlFor="fileInput"
-            className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer"
+          <button
+            type="button"
+            onClick={() => document.getElementById("fileInput")?.click()}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md"
           >
-            Agregar Imágenes
-          </Button>
+            Seleccionar Imágenes
+          </button>
+
 
         </Stack>
       </div>
