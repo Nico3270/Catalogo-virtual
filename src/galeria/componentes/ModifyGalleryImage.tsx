@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import { updateGalleryImage } from "@/galeria/actions/updateGalleryImage";
 import { deleteImage } from "@/galeria/actions/deleteImage";
 import { ImageGalleryItem } from "@/galeria/interfaces/types";
-import { FiTrash2, FiEdit } from "react-icons/fi";
+import { uploadImageToCloudinary } from "@/galeria/actions/uploadImageToCloudinary";
+import { FiTrash2, FiEdit, FiUploadCloud } from "react-icons/fi";
 import Image from "next/image";
 
 interface ModifyGalleryImageProps {
@@ -18,12 +19,33 @@ const ModifyGalleryImage: React.FC<ModifyGalleryImageProps> = ({ initialImage })
     description: initialImage.description,
   });
 
+  const [uploading, setUploading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  // Subir nueva imagen a Cloudinary
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setUploading(true);
+      try {
+        const uploadedUrl = await uploadImageToCloudinary(file);
+        setFormData((prev) => ({ ...prev, url: uploadedUrl }));
+        alert("Imagen subida con éxito.");
+      } catch (error) {
+        console.error("Error al subir la imagen:", error);
+        alert("Error al subir la imagen.");
+      } finally {
+        setUploading(false);
+      }
+    }
+  };
+
   const handleUpdate = async () => {
     try {
       const response = await updateGalleryImage({
         id: initialImage.id,
         ...formData,
-        order: initialImage.order, // Se conserva el valor original de order
+        order: initialImage.order,
       });
 
       if (response.success) {
@@ -39,22 +61,24 @@ const ModifyGalleryImage: React.FC<ModifyGalleryImageProps> = ({ initialImage })
 
   const handleDelete = async () => {
     if (confirm("¿Estás seguro de que deseas eliminar esta imagen?")) {
+      setDeleting(true);
       try {
         const response = await deleteImage(initialImage.id);
-  
+
         if (response.success) {
           alert("Imagen eliminada con éxito.");
-          window.location.href = "/dashboard/galleryImages"; // Redirige en lugar de recargar
+          window.location.href = "/dashboard/galleryImages";
         } else {
           alert(response.error || "Error al eliminar la imagen.");
         }
       } catch (error) {
         console.error("Error al eliminar la imagen:", error);
         alert("Error al eliminar la imagen.");
+      } finally {
+        setDeleting(false);
       }
     }
   };
-  
 
   return (
     <div className="w-full max-w-xl mx-auto bg-white shadow-md rounded-lg p-6">
@@ -62,14 +86,16 @@ const ModifyGalleryImage: React.FC<ModifyGalleryImageProps> = ({ initialImage })
       <Image
         src={formData.url}
         alt={formData.title}
+        width={600}
+        height={400}
         className="w-full h-48 object-cover rounded-lg mb-6"
       />
       <div className="grid grid-cols-1 gap-4">
         <input
-          type="text"
-          placeholder="URL de la imagen"
-          value={formData.url}
-          onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+          type="file"
+          accept="image/*"
+          capture
+          onChange={handleFileChange}
           className="border rounded-md p-2"
         />
         <input
@@ -90,15 +116,17 @@ const ModifyGalleryImage: React.FC<ModifyGalleryImageProps> = ({ initialImage })
       <div className="flex justify-between mt-6">
         <button
           onClick={handleUpdate}
+          disabled={uploading}
           className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-center gap-2"
         >
-          <FiEdit /> Modificar
+          <FiEdit /> {uploading ? "Actualizando..." : "Modificar"}
         </button>
         <button
           onClick={handleDelete}
+          disabled={deleting}
           className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 flex items-center gap-2"
         >
-          <FiTrash2 /> Eliminar
+          <FiTrash2 /> {deleting ? "Eliminando..." : "Eliminar"}
         </button>
       </div>
     </div>

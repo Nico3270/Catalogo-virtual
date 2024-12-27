@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: product.nombre,
       description: product.descripcion || "",
       images: [imageUrl],
-      url: `https://www.tusitio.com/product/${product.slug}`,
+      url: `https://catalogo-virtual.vercel.app/producto/${product.slug}`,
     },
     twitter: {
       card: "summary_large_image",

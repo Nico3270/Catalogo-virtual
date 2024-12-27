@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Image from "next/image";
+import Link from "next/link";
 
 interface ProductsDashboardProps {
   initialData: {
@@ -34,8 +35,8 @@ export const ProductsDashboard = ({ initialData, fetchProducts }: ProductsDashbo
   };
 
   return (
-    <div className="relative">
-      <table className="min-w-full border-collapse table-auto text-left">
+    <div className="relative overflow-x-auto">
+      <table className="min-w-max w-full border-collapse table-auto text-left">
         <thead>
           <tr className="border-b">
             <th className="p-4">Imagen</th>
@@ -57,15 +58,25 @@ export const ProductsDashboard = ({ initialData, fetchProducts }: ProductsDashbo
                 />
 
               </td>
-              <td className="p-4">{product.nombre}</td>
+
+              <td className="p-4">
+
+                <Link
+                  href={`/dashboard/productos/${product.id}`}
+                  className="text-blue-500 hover:underline"
+                >
+                  {product.nombre}
+                </Link>
+              </td>
+
               <td className="p-4">${product.precio.toFixed(2)}</td>
               <td className="p-4">
-                <a
+                <Link
                   href={`/dashboard/productos/${product.id}`}
                   className="text-blue-500 hover:underline"
                 >
                   Editar
-                </a>
+                </Link>
               </td>
             </tr>
           ))}

@@ -173,7 +173,7 @@ export default function CreateNewProduct({ allSections }: CreateNewProductProps)
           ))}
           <label className="flex items-center justify-center w-32 h-32 border-2 border-dashed rounded-lg cursor-pointer">
             <AiOutlinePlus size={24} />
-            <input type="file" accept="image/*" multiple onChange={handleAddImage} className="hidden" />
+            <input type="file" accept="image/*" capture multiple onChange={handleAddImage} className="hidden" />
           </label>
         </Stack>
       </div>

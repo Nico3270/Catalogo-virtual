@@ -204,7 +204,11 @@ export const ShowOrders = ({ orders, totalOrders, ordersPerPage }: ShowOrdersPro
           <tbody>
             {paginatedOrders.map((order) => (
               <tr key={order.id} className="hover:bg-gray-100">
-                <td className="border p-2">{order.id.slice(-8)}</td>
+                <td className="border p-2">
+                  <Link href={`/dashboard/order/${order.id}`} className="text-blue-600 hover:underline">
+                    {order.id.slice(-8)}
+                  </Link>
+                </td>
                 <td className="border p-2 text-center">{order.items.length}</td>
                 <td className="border p-2">
                   <ul>

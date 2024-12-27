@@ -49,36 +49,36 @@ const Page = () => {
     <main className="relative min-h-screen bg-gray-50">
       {/* Menú superior dentro del contenedor */}
       <nav className="sticky top-0 pt-5 bg-white shadow-lg z-10">
-      <ul className="flex justify-around items-center py-3 border-b border-gray-200">
-        <li>
-          <a
-            href="#addTransaction"
-            className="flex flex-col items-center text-gray-600 hover:text-[#640D5F] transition-colors duration-300"
-          >
-            <FaPlusCircle className="text-2xl mb-1" />
-            <span className="text-sm font-medium">Agregar</span>
-          </a>
-        </li>
-        <li>
-          <a
-            href="#charts"
-            className="flex flex-col items-center text-gray-600 hover:text-[#640D5F] transition-colors duration-300"
-          >
-            <FaChartPie className="text-2xl mb-1" />
-            <span className="text-sm font-medium">Gráficos</span>
-          </a>
-        </li>
-        <li>
-          <a
-            href="#transactions"
-            className="flex flex-col items-center text-gray-600 hover:text-[#640D5F] transition-colors duration-300"
-          >
-            <FaListAlt className="text-2xl mb-1" />
-            <span className="text-sm font-medium">Transacciones</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
+        <ul className="flex justify-around items-center py-3 border-b border-gray-200">
+          <li>
+            <a
+              href="#addTransaction"
+              className="flex flex-col items-center text-gray-600 hover:text-[#640D5F] transition-colors duration-300"
+            >
+              <FaPlusCircle className="text-2xl mb-1" />
+              <span className="text-sm font-medium">Agregar</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="#charts"
+              className="flex flex-col items-center text-gray-600 hover:text-[#640D5F] transition-colors duration-300"
+            >
+              <FaChartPie className="text-2xl mb-1" />
+              <span className="text-sm font-medium">Gráficos</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="#transactions"
+              className="flex flex-col items-center text-gray-600 hover:text-[#640D5F] transition-colors duration-300"
+            >
+              <FaListAlt className="text-2xl mb-1" />
+              <span className="text-sm font-medium">Transacciones</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
 
 
       {/* Contenido principal */}
@@ -100,7 +100,8 @@ const Page = () => {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition"
+          style={{ bottom: 'calc(3rem + 60px)' }}  // Ajusta '60px' según la altura de tu barra inferior
+          className="fixed right-6 bg-blue-500 text-white p-3 mr-5 rounded-full shadow-lg hover:bg-blue-600 transition"
           aria-label="Subir al inicio"
         >
           <FiArrowUp size={24} />

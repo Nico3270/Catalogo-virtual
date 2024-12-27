@@ -32,7 +32,7 @@ export const ShowInformationOrder: React.FC<ShowInformationOrderProps> = ({ orde
     );
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6">
             {/* Información de la orden */}
             <div className="bg-white shadow-md rounded-lg p-6">
                 <h2 className="text-xl font-bold mb-4">Información de la Orden</h2>
