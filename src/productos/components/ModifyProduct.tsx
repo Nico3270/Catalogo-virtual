@@ -275,7 +275,7 @@ export default function ModifyProduct({ product, allSections }: ModifyProductPro
           <input
             type="file"
             accept="image/*"
-            capture
+            capture="environment"
             multiple
             onChange={handleAddImage}
             className="hidden"

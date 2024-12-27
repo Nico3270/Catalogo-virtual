@@ -94,7 +94,7 @@ const ModifyGalleryImage: React.FC<ModifyGalleryImageProps> = ({ initialImage })
         <input
           type="file"
           accept="image/*"
-          capture
+          capture="environment"
           onChange={handleFileChange}
           className="border rounded-md p-2"
         />

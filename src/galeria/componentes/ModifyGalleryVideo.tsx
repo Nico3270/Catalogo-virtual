@@ -115,7 +115,7 @@ const ModifyGalleryVideo: React.FC<ModifyGalleryVideoProps> = ({ initialVideo })
         <input
           type="file"
           accept="video/*"
-          capture
+          capture="environment"
           onChange={handleFileChange}
           className="hidden"
           id="fileInput"

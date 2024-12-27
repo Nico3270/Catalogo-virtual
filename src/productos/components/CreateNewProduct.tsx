@@ -110,7 +110,7 @@ export default function CreateNewProduct({ allSections }: CreateNewProductProps)
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 bg-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto">
-      
+
 
       <TextField label="Nombre" {...register("nombre", { required: true })} fullWidth />
       <TextField label="Precio" type="number" {...register("precio", { required: true })} fullWidth />
@@ -173,7 +173,15 @@ export default function CreateNewProduct({ allSections }: CreateNewProductProps)
           ))}
           <label className="flex items-center justify-center w-32 h-32 border-2 border-dashed rounded-lg cursor-pointer">
             <AiOutlinePlus size={24} />
-            <input type="file" accept="image/*" capture multiple onChange={handleAddImage} className="hidden" />
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={handleAddImage}
+              className="hidden"
+              id="fileInput"
+            />
+
           </label>
         </Stack>
       </div>
