@@ -2,7 +2,7 @@
 
 import { CartCheckout } from "@/checkout/componentes/CartChekout";
 import OrderCheckoutSummary from "./OrderCheckoutSummary";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 
 
 export default function VerificarOrden() {

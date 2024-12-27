@@ -4,7 +4,7 @@ import { getProductsCarrusel } from "@/producto/actions/getProductsCarrusel";
 import { ProductsCarrusel } from "@/producto/components/ProductsCarrusel";
 import BlogArticulos from "@/secondary/componentes/BlogArticulos";
 import QuienesSomos, { Tarjeta } from "@/secondary/componentes/QuienesSomos";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 import { FaTree, FaMapMarkerAlt, FaGift, FaSmile } from "react-icons/fa";
 
 const tarjetas: Tarjeta[] = [

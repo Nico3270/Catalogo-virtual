@@ -1,6 +1,6 @@
 "use client"
 import { ProductGrid } from "@/seccion/componentes/ProductGridSeccion";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 import Pagination from "@mui/material/Pagination";
 import { useEffect, useState } from "react";
 import { Product } from "@/interfaces/product.interface";

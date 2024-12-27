@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 export default function NotAuthorizedPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 text-gray-800 px-6">

@@ -4,7 +4,7 @@ import { ProductGridProduct } from "@/producto/components/ProductGridProduct";
 import { ResponsiveSlideShow } from "@/producto/components/ResonsiveSlideShow";
 import { AddToCart } from "@/producto/components/AddToCart";
 import { getProductBySlug } from "@/producto/actions/getProductBySlug";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 interface Props {
   params: Promise<{
     slug: string;

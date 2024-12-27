@@ -1,6 +1,6 @@
 import { FavoritesGrid } from "@/favoritos/componentes/FavoritesGrid";
 import { FaHeart } from "react-icons/fa";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 
 export default function FavoritePage() {
   return (

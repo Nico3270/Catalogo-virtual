@@ -2,7 +2,7 @@ import { getArticleInformation } from "@/blog/actions/getArticleInformation";
 import ShowBlogArticle from "@/blog/componentes/ShowBlogArticle";
 import { getProductsCarruselBySlug } from "@/producto/actions/getProductsCarruselBySlug";
 import { ProductsCarrusel } from "@/producto/components/ProductsCarrusel";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 // Ajuste en el tipo para aceptar `params` como una promesa
 type Params = Promise<{ slug: string }>;
 

@@ -1,5 +1,5 @@
 // src/app/cart/page.tsx
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 import { OrderSummaryWithActions } from "@/carro/componentes/OrderSummaryWithActions";
 import { ProductsInCart } from "@/carro/componentes/ProductsInCart";
 import { RubikFont } from "@/config/fonts";

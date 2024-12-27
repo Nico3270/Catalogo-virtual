@@ -1,6 +1,6 @@
 import { ProductGrid } from "@/seccion/componentes/ProductGridSeccion";
 import { getProductsBySection } from "@/seccion/actions/getProductsBySection";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 interface Props {
   params: Promise<{
     id: string; // El slug de la sección

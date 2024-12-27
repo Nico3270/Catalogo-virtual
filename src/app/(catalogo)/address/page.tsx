@@ -1,5 +1,5 @@
 "use client";
-
+export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 
 import { AddressForm } from "@/address/componentes/AddressForm";
 import Image from "next/image";
