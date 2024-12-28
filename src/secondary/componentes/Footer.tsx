@@ -76,7 +76,7 @@ export const Footer = () => {
           </div>
           <div className="flex flex-col space-y-2">
             <h3 className="text-lg font-bold text-[#4a4e69]">Más</h3>
-            <Link href="/products" className={`hover:text-[#FFB200] transition-colors ${Sour_Gummy_Font.className}`}>
+            <Link href="/productos" className={`hover:text-[#FFB200] transition-colors ${Sour_Gummy_Font.className}`}>
               Productos
             </Link>
             <Link href="/gallery" className={`hover:text-[#FFB200] transition-colors ${Sour_Gummy_Font.className}`}>

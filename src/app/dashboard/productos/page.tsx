@@ -1,12 +1,13 @@
 import { getProductsToDashboard } from "@/productos/actions/getProductsToDashboard";
 import { ProductsDashboard } from "@/productos/components/ProductsDashboard";
 export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
+
 export default async function ProductsPage() {
-  const initialData = await getProductsToDashboard({ page: 1, pageSize: 10 });
+  const initialData = await getProductsToDashboard({ page: 1, pageSize: 20 });
 
   const fetchProducts = async (page: number) => {
     "use server";
-    const data = await getProductsToDashboard({ page, pageSize: 10 });
+    const data = await getProductsToDashboard({ page, pageSize: 20 });
     return { products: data.products };
   };
 
@@ -18,7 +19,6 @@ export default async function ProductsPage() {
       <ProductsDashboard
         initialData={{
           products: initialData.products,
-          totalPages: initialData.totalPages,
         }}
         fetchProducts={fetchProducts}
       />

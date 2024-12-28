@@ -35,7 +35,7 @@ export const FavoritesGrid = () => {
             height={300}
             className="mx-auto mb-6"
           />
-          <Link href="/products">
+          <Link href="/productos">
             <button className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
               Explorar Productos
             </button>

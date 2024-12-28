@@ -6,6 +6,7 @@ import {
   DndContext,
   closestCenter,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   DragEndEvent,
@@ -18,6 +19,7 @@ import {
 import { getSectionsList } from "../actions/getSectionsList";
 import { updateSectionsOrder } from "../actions/updateSectionsOrder";
 import { SortableItem } from "./SortableItem";
+import { FaGripVertical } from "react-icons/fa";
 
 interface Section {
   id: string;
@@ -44,7 +46,17 @@ export const SectionsList = () => {
   }, []);
 
   const sensors = useSensors(
-    useSensor(PointerSensor)
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5, // Activar arrastre tras 5px
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    })
   );
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
@@ -86,7 +98,8 @@ export const SectionsList = () => {
 
   return (
     <div className="container mx-auto p-4 bg-white rounded-md shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Lista de Secciones</h2>
+      <h2 className="text-2xl font-bold mb-4 text-center">Lista de Secciones</h2>
+
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -96,25 +109,37 @@ export const SectionsList = () => {
           items={sections.map((section) => section.id)}
           strategy={verticalListSortingStrategy}
         >
-          <table className="table-auto w-full border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="border p-2">Nombre</th>
-                <th className="border p-2">Slug</th>
-                <th className="border p-2">Orden</th>
-                <th className="border p-2">Estado</th>
-                <th className="border p-2">Modificar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sections.map((section) => (
-                <SortableItem key={section.id} id={section.id}>
-                  <>
+          <div className="overflow-x-auto">
+            <table className="table-auto min-w-[600px] w-full border-collapse border border-gray-300">
+              <thead>
+                <tr className="bg-gray-200 text-center">
+                  <th className="border p-2 w-12"></th>
+                  <th className="border p-2 w-12">Orden</th>
+                  <th className="border p-2">Nombre</th>
+                  <th className="border p-2">Slug</th>
+                  <th className="border p-2">Estado</th>
+                  <th className="border p-2">Modificar</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sections.map((section, index) => (
+                  <tr key={section.id}>
+                    <td className="border p-2 text-center">
+                      <div className="cursor-grab" role="button">
+                        <SortableItem id={section.id}>
+                          <FaGripVertical className="text-gray-500" />
+                        </SortableItem>
+                      </div>
+                    </td>
+                    <td className="border p-2 text-center">{section.order}</td>
                     <td className="border p-2">{section.nombre}</td>
                     <td className="border p-2">{section.slug}</td>
-                    <td className="border p-2">{section.order}</td>
-                    <td className="border p-2">
-                      {section.isActive ? "Activo" : "Inactivo"}
+                    <td className="border p-2 text-center">
+                      {section.isActive ? (
+                        <span className="text-green-600 font-bold">Activo</span>
+                      ) : (
+                        <span className="text-red-500 font-bold">Inactivo</span>
+                      )}
                     </td>
                     <td className="border p-2 text-center">
                       <Link
@@ -124,18 +149,19 @@ export const SectionsList = () => {
                         Modificar
                       </Link>
                     </td>
-                  </>
-                </SortableItem>
-              ))}
-            </tbody>
-          </table>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </SortableContext>
       </DndContext>
+
       <div className="mt-4 text-right">
         <button
           onClick={saveOrder}
           disabled={isSaving}
-          className={`px-4 py-2 rounded-md ${
+          className={`px-6 py-2 rounded-md ${
             isSaving
               ? "bg-gray-400 text-gray-800 cursor-not-allowed"
               : "bg-blue-600 text-white hover:bg-blue-700"

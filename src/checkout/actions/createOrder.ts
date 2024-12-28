@@ -28,7 +28,7 @@ export const createOrder = async (data: CreateOrderInput) => {
   try {
     const { cartItems, address } = data;
 
-    console.log("Datos recibidos para crear orden:", { cartItems, address }); // Log para depurar
+    // console.log("Datos recibidos para crear orden:", { cartItems, address }); // Log para depurar
 
     const createdOrder = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const deliveryData = await tx.deliveryData.create({
@@ -46,7 +46,7 @@ export const createOrder = async (data: CreateOrderInput) => {
         },
       });
 
-      console.log("Datos de entrega creados:", deliveryData); // Log para confirmar
+      // console.log("Datos de entrega creados:", deliveryData); // Log para confirmar
 
       const order = await tx.order.create({
         data: {
@@ -70,7 +70,7 @@ export const createOrder = async (data: CreateOrderInput) => {
         },
       });
 
-      console.log("Orden creada:", order); // Log para confirmar
+      // console.log("Orden creada:", order); // Log para confirmar
 
       await tx.orderStatusHistory.create({
         data: {

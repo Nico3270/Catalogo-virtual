@@ -296,7 +296,7 @@ export default function ModifyProduct({ product, allSections }: ModifyProductPro
       </div>
 
       {/* Botón de Guardar */}
-      <Button type="submit" variant="contained" color="primary" disabled={loading}>
+      <Button className="pb-20" type="submit" variant="contained" color="primary" disabled={loading}>
         {loading ? "Guardando..." : "Guardar Cambios"}
       </Button>
 

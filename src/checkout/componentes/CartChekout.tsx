@@ -23,7 +23,7 @@ export const CartCheckout = () => {
           Tu carrito está vacío.
         </p>
         <Link
-          href="/products"
+          href="/productos"
           className="text-red-500 underline hover:text-red-600"
         >
           Regresar a la tienda

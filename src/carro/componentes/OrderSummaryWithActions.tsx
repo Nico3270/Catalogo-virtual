@@ -27,7 +27,7 @@ export const OrderSummaryWithActions = () => {
       {totalItems === 0 ? (
         <div className="text-center">
           <p className="text-lg text-gray-500 mb-4">No tienes productos en tu carrito.</p>
-          <Link href="/products">
+          <Link href="/productos">
             <button className="mt-4 px-6 py-2 text-white font-bold rounded-lg bg-[#be95c4] hover:bg-[#a373b3] transition-colors">
               Explorar Productos
             </button>

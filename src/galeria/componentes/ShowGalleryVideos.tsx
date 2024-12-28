@@ -132,7 +132,6 @@ const ShowGalleryVideos: React.FC<ShowGalleryVideosProps> = ({ initialVideos }) 
           <input
             type="file"
             accept="video/*"
-            capture="environment"
             onChange={handleFileChange}
             className="border rounded-md p-2"
           />
