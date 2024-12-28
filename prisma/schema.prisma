@@ -15,7 +15,7 @@ model Product {
   descripcionCorta String?
   slug             String           @unique
   prioridad        Int?
-  status           String
+  status           String           @default("available") // Campo para manejar el estado
   tags             String[]
   imagenes         Image[]          @relation("ProductImages")
   secciones        ProductSection[]

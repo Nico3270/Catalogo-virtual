@@ -20,6 +20,11 @@ export const getProductsByPriority = async ({
     // Consulta a la base de datos para obtener los productos ordenados por prioridad
     const [products, total] = await Promise.all([
       prisma.product.findMany({
+        where: {
+          status: {
+            not: "discontinued", // Filtrar productos que no estén descontinuados
+          },
+        },
         orderBy: {
           prioridad: "asc", // Ordenar por prioridad (de menor a mayor)
         },
@@ -30,7 +35,13 @@ export const getProductsByPriority = async ({
           secciones: true, // Incluir secciones relacionadas
         },
       }),
-      prisma.product.count(), // Obtener el total de productos
+      prisma.product.count({
+        where: {
+          status: {
+            not: "discontinued", // Contar solo productos no descontinuados
+          },
+        },
+      }),
     ]);
 
     // Formatea los productos para que coincidan con la interfaz Product

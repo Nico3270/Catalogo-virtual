@@ -18,12 +18,25 @@ export async function getProductsToDashboard({
   totalPages: number;
 }> {
   const skip = (page - 1) * pageSize;
-  const total = await prisma.product.count();
+
+  // Filtra los productos que no están descontinuados
+  const total = await prisma.product.count({
+    where: {
+      status: {
+        not: "discontinued",
+      },
+    },
+  });
 
   const products = await prisma.product.findMany({
     skip,
     take: pageSize,
     orderBy: { createdAt: "desc" },
+    where: {
+      status: {
+        not: "discontinued",
+      },
+    },
     include: {
       secciones: true,
       imagenes: true,

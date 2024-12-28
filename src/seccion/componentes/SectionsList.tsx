@@ -122,7 +122,7 @@ export const SectionsList = () => {
                 </tr>
               </thead>
               <tbody>
-                {sections.map((section, index) => (
+                {sections.map((section) => (
                   <tr key={section.id}>
                     <td className="border p-2 text-center">
                       <div className="cursor-grab" role="button">

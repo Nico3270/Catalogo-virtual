@@ -3,6 +3,7 @@ import { MdAddAPhoto } from "react-icons/md";  // Icono de cámara con "+"
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { modifyProduct } from "@/productos/actions/modifyProduct";
+
 import {
   Alert,
   Stack,
@@ -13,10 +14,17 @@ import {
   IconButton,
   FormControl,
   FormLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import { FaTrashAlt } from "react-icons/fa";
 import Image from "next/image";
 import imageCompression from "browser-image-compression";
+import { useRouter } from "next/navigation";
+import { discontinueProduct } from "@/producto/actions/discontinueProduct";
 
 interface ImageExtended {
   id: string;
@@ -74,6 +82,8 @@ export default function ModifyProduct({ product, allSections }: ModifyProductPro
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [images, setImages] = useState<ImageExtended[]>([]);
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false); // Modal para descontinuar
+  const router = useRouter();
   const selectedSections = watch("seccionIds") || []; // Se asegura de que sea un array
 
   useEffect(() => {
@@ -162,12 +172,26 @@ export default function ModifyProduct({ product, allSections }: ModifyProductPro
     );
   };
 
+  const handleDiscontinue = async () => {
+    const response = await discontinueProduct(product.id);
+    if (response.ok) {
+      router.push("/dashboard/productos");
+    } else {
+      setAlert({ type: "error", message: "No se pudo descontinuar el producto." });
+    }
+  };
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="p-6 bg-white rounded-lg shadow-md max-w-4xl mx-auto space-y-6"
     >
-      <h2 className="text-3xl font-bold text-center mb-4">Modificar Producto</h2>
+      <div className="flex justify-between items-center">
+        <h2 className="text-3xl font-bold">Modificar Producto</h2>
+        <Button variant="contained" color="error" onClick={() => setOpen(true)}>
+          <FaTrashAlt className="mr-2" /> Descontinuar
+        </Button>
+      </div>
 
       {/* Nombre */}
       <TextField
@@ -306,6 +330,19 @@ export default function ModifyProduct({ product, allSections }: ModifyProductPro
           {alert.message}
         </Alert>
       )}
+
+<Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>Descontinuar Producto</DialogTitle>
+        <DialogContent>
+          <DialogContentText>¿Estás seguro de descontinuar este producto?</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>Cancelar</Button>
+          <Button onClick={handleDiscontinue} color="error">
+            Descontinuar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </form>
   );
 }
