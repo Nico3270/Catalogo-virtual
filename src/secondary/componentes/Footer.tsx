@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FaFacebookF, FaInstagram, FaTiktok, FaWhatsapp } from "react-icons/fa";
+import { GiArchiveRegister } from "react-icons/gi";  // Icono legal
 import Image from "next/image";
 import { Ruta_Logo } from "@/config/config";
 import { Sour_Gummy_Font } from "@/config/fonts";
@@ -9,12 +10,13 @@ export const Footer = () => {
     <footer className="bg-[#f8edeb] text-[#ba5b4f] py-6 pb-20 md:pb-6">
 
       <div className="container mx-auto px-4 flex flex-col md:flex-row md:justify-between items-center md:items-start space-y-6 md:space-y-0">
+        
         {/* Columna izquierda: Logo y nombre */}
         <div className="flex items-center space-x-4">
           <Link href="/">
             <Image
-              src={Ruta_Logo} // Cambia a la ruta de tu logo
-              alt="Parrilla Internacional Logo"
+              src={Ruta_Logo}  // Ruta del logo
+              alt="Detalles Sorpresas y Regalos Logo"
               width={80}
               height={80}
               className="rounded-lg"
@@ -22,9 +24,13 @@ export const Footer = () => {
           </Link>
           <div>
             <Link href="/">
-              <h2 className="text-2xl font-bold text-[#4a4e69]">Detalles Sorpresas y Regalos</h2>
+              <h2 className="text-2xl font-bold text-[#4a4e69]">
+                Detalles Sorpresas y Regalos
+              </h2>
             </Link>
-            <p className="text-sm text-[#4a4e69]">Detalles para todo tipo de ocasión en Tunja.</p>
+            <p className="text-sm text-[#4a4e69]">
+              Detalles para todo tipo de ocasión en Tunja.
+            </p>
           </div>
         </div>
 
@@ -61,16 +67,27 @@ export const Footer = () => {
               <FaTiktok size={28} />
             </Link>
           </div>
+
+          {/* Link a términos y políticas */}
+          <div className="mt-6 flex items-center space-x-2">
+            <GiArchiveRegister className="text-xl text-[#4a4e69]" />
+            <Link
+              href="/legal"
+              className="text-sm text-[#4a4e69] hover:text-[#FFB200] transition-colors"
+            >
+              Términos, Condiciones y Políticas
+            </Link>
+          </div>
         </div>
 
-        {/* Columna derecha: Secciones en dos columnas */}
+        {/* Columna derecha: Secciones */}
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col space-y-2">
             <h3 className="text-lg font-bold text-[#4a4e69]">Secciones</h3>
-            <Link href="/contact" className={`hover:text-[#FFB200] transition-colors ${Sour_Gummy_Font.className}`}>
+            <Link href="/contacto" className={`hover:text-[#FFB200] transition-colors ${Sour_Gummy_Font.className}`}>
               Contacto
             </Link>
-            <Link href="/services" className={`hover:text-[#FFB200] transition-colors ${Sour_Gummy_Font.className}`}>
+            <Link href="/servicios" className={`hover:text-[#FFB200] transition-colors ${Sour_Gummy_Font.className}`}>
               Servicios
             </Link>
           </div>
@@ -79,7 +96,7 @@ export const Footer = () => {
             <Link href="/productos" className={`hover:text-[#FFB200] transition-colors ${Sour_Gummy_Font.className}`}>
               Productos
             </Link>
-            <Link href="/gallery" className={`hover:text-[#FFB200] transition-colors ${Sour_Gummy_Font.className}`}>
+            <Link href="/galeria" className={`hover:text-[#FFB200] transition-colors ${Sour_Gummy_Font.className}`}>
               Galería
             </Link>
           </div>

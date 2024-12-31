@@ -27,10 +27,10 @@ const ModifyBlogClientWrapper: React.FC<ModifyBlogClientWrapperProps> = ({
 
       // Enviar al servidor en el formato BlogUpdateData
       await updateBlog(blogId, data);
-      alert("¡Blog actualizado con éxito!");
+      
     } catch (error) {
       console.error("Error al actualizar el blog:", error);
-      alert("Hubo un error al actualizar el blog.");
+      
     }
   };
 

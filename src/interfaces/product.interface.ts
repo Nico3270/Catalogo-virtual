@@ -47,3 +47,15 @@ export interface CartProduct {
   comentario?: string; // Comentarios adicionales ingresados por el usuario
 }
 
+// src/interfaces/service.interface.ts
+
+export interface Service {
+  id: string;
+  titulo: string;
+  descripcion: string;
+  imagen: string;
+  slug: string;
+  isActive: boolean;
+  createdAt: string;  // Aseguramos que siempre sea string
+  updatedAt: string;
+}

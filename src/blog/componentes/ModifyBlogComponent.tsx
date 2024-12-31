@@ -1,8 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { FaPlus, FaTrashAlt } from "react-icons/fa";
+import ModifyImagesBlog from "./ModifyImagesBlog";
+import { Modal, Box, Typography,  Button } from "@mui/material";
 
 export interface AdaptedArticulo {
   id: string;
@@ -25,7 +27,7 @@ const ModifyBlogComponent: React.FC<{
     subtitulos: string[];
   }) => Promise<void>;
 }> = ({ blog, onSubmit }) => {
-  const { register, control, handleSubmit, formState: { errors } } = useForm<AdaptedArticulo>({
+  const { register, control, handleSubmit, formState: { errors }, setValue } = useForm<AdaptedArticulo>({
     defaultValues: {
       id: blog.id || "",
       titulo: blog.titulo || "",
@@ -40,10 +42,7 @@ const ModifyBlogComponent: React.FC<{
     },
   });
 
-  const { fields: imagenFields, append: appendImagen, remove: removeImagen } = useFieldArray({
-    control,
-    name: "imagenes",
-  });
+
 
   const { fields: parrafoFields, append: appendParrafo, remove: removeParrafo } = useFieldArray({
     control,
@@ -56,17 +55,35 @@ const ModifyBlogComponent: React.FC<{
       name: "subtitulos",
     });
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  // Función para manejar actualizaciones de imágenes
+  const handleImagesUpdated = (urls: { principal: string; adicionales: string[] }) => {
+    setValue("imagen", urls.principal);
+    setValue("imagenes", urls.adicionales.map((url) => ({ url })));
+  };
+
+
   // Transforma los datos antes de enviarlos
   const handleFormSubmit = async (data: AdaptedArticulo) => {
-    const formattedData = {
-      ...data,
-      imagenes: data.imagenes.map((img) => img.url), // Extraer solo las URLs
-      parrafos: data.parrafos.map((p) => p.texto), // Extraer solo los textos
-      subtitulos: data.subtitulos.map((s) => s.texto), // Extraer solo los textos
-    };
+    try {
+      const formattedData = {
+        ...data,
+        imagenes: data.imagenes.map((img) => img.url),
+        parrafos: data.parrafos.map((p) => p.texto),
+        subtitulos: data.subtitulos.map((s) => s.texto),
+      };
 
-    
-    await onSubmit(formattedData);
+      await onSubmit(formattedData);
+      setModalMessage("El blog se actualizó correctamente");
+    } catch (error) {
+      setModalMessage("Hubo un error al actualizar el blog");
+      console.error(error)
+    } finally {
+      setIsSaving(false);
+      setModalOpen(true);
+    }
   };
 
   return (
@@ -97,33 +114,31 @@ const ModifyBlogComponent: React.FC<{
         />
       </div>
 
-      {/* Imagen Principal */}
-      <div>
-        <label className="block font-bold mb-1">Imagen Principal</label>
-        <input
-          {...register("imagen", { required: "La imagen principal es obligatoria" })}
-          className="w-full border rounded p-2"
-          placeholder="URL de la imagen principal"
-        />
-      </div>
+      {/* Componente para manejo de imágenes */}
+      <ModifyImagesBlog
+        blogId={blog.id}
+        imagenPrincipal={blog.imagen}
+        imagenesAdicionales={blog.imagenes.map((img) => img.url)}
+        onImagesUpdated={handleImagesUpdated}  // Función para actualizar imágenes en el formulario
+      />
 
-      {/* Imágenes Adicionales */}
+      {/* Subtítulos */}
       <div>
-        <label className="block font-bold mb-1">Imágenes Adicionales</label>
-        {imagenFields.map((field, index) => (
+        <label className="block font-bold mb-1">Subtítulos</label>
+        {subtituloFields.map((field, index) => (
           <div key={field.id} className="flex items-center gap-2 mb-2">
             <input
-              {...register(`imagenes.${index}.url`)}
+              {...register(`subtitulos.${index}.texto`)}
               className="w-full border rounded p-2"
-              placeholder={`URL de la imagen ${index + 1}`}
+              placeholder={`Subtítulo ${index + 1}`}
             />
-            <button type="button" onClick={() => removeImagen(index)} className="text-red-500">
+            <button type="button" onClick={() => removeSubtitulo(index)} className="text-red-500">
               <FaTrashAlt />
             </button>
           </div>
         ))}
-        <button type="button" onClick={() => appendImagen({ url: "" })} className="text-[#D91656]">
-          <FaPlus className="mr-2" /> Añadir Imagen
+        <button type="button" onClick={() => appendSubtitulo({ texto: "" })} className="text-[#D91656]">
+          <FaPlus className="mr-2" /> Añadir Subtítulo
         </button>
       </div>
 
@@ -147,25 +162,7 @@ const ModifyBlogComponent: React.FC<{
         </button>
       </div>
 
-      {/* Subtítulos */}
-      <div>
-        <label className="block font-bold mb-1">Subtítulos</label>
-        {subtituloFields.map((field, index) => (
-          <div key={field.id} className="flex items-center gap-2 mb-2">
-            <input
-              {...register(`subtitulos.${index}.texto`)}
-              className="w-full border rounded p-2"
-              placeholder={`Subtítulo ${index + 1}`}
-            />
-            <button type="button" onClick={() => removeSubtitulo(index)} className="text-red-500">
-              <FaTrashAlt />
-            </button>
-          </div>
-        ))}
-        <button type="button" onClick={() => appendSubtitulo({ texto: "" })} className="text-[#D91656]">
-          <FaPlus className="mr-2" /> Añadir Subtítulo
-        </button>
-      </div>
+
 
       {/* Orden */}
       <div>
@@ -191,10 +188,20 @@ const ModifyBlogComponent: React.FC<{
       {/* Botón de Guardar */}
       <button
         type="submit"
-        className="w-full bg-[#640D5F] text-white font-bold py-2 rounded hover:bg-[#D91656]"
+        disabled={isSaving}
+        className={`w-full text-white font-bold py-2 rounded ${isSaving ? "bg-gray-400 cursor-not-allowed" : "bg-[#640D5F] hover:bg-[#D91656]"}`}
       >
         Guardar Cambios
       </button>
+      {/* Modal de Confirmación */}
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+        <Box className="p-6 bg-white rounded-md max-w-md mx-auto mt-20">
+          <Typography>{modalMessage}</Typography>
+          <Button onClick={() => setModalOpen(false)} variant="contained" color="primary">
+            Cerrar
+          </Button>
+        </Box>
+      </Modal>
     </form>
   );
 };

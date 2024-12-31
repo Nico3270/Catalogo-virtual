@@ -1,225 +1,359 @@
 "use client";
 
-import React from "react";
+import React, { useState, useRef } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
-import { FaPlus } from "react-icons/fa";
+import {
+  TextField,
+  Button,
+  Stack,
+  IconButton,
+  Alert,
+  Typography,
+  Divider,
+  FormControlLabel,
+  Checkbox,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+import Image from "next/image";
+import { MdAddAPhoto } from "react-icons/md";
+import { FaTrashAlt } from "react-icons/fa";
+import { AiOutlinePlus } from "react-icons/ai";
+import { postNewBlog } from "@/blog/actions/postNewBlog";
 
-export interface Section {
+interface Section {
   id: string;
   nombre: string;
 }
 
-export interface FormValues {
+interface BlogFormData {
   titulo: string;
   descripcion: string;
-  imagen: string;
-  imagenes: { url: string }[];
-  parrafos: { texto: string }[];
-  subtitulos: { texto: string }[];
   autor: string;
   orden: number;
+  parrafos: { texto: string }[];
+  subtitulos: { texto: string }[];
+  imagen: string;
+  imagenes: { url: string }[];
   secciones: string[];
 }
 
-const CreateNewBlog: React.FC<{
+interface CreateNewBlogProps {
   secciones: Section[];
-  onSubmit: (data: FormValues) => Promise<void>; // Se acepta cualquier tipo de promesa
-}> = ({ secciones, onSubmit }) => {
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
+}
+
+export default function CreateNewBlog({ secciones }: CreateNewBlogProps) {
+  const { register, handleSubmit, control, setValue, reset } = useForm<BlogFormData>({
     defaultValues: {
       titulo: "",
       descripcion: "",
-      imagen: "",
-      imagenes: [],
-      parrafos: [],
-      subtitulos: [],
       autor: "",
       orden: 0,
+      parrafos: [],
+      subtitulos: [],
       secciones: [],
     },
   });
 
-  const { fields: imagenFields, append: appendImagen } = useFieldArray({
-    control,
-    name: "imagenes",
+  const { fields: parrafos, append: addParrafo, remove: removeParrafo } =
+    useFieldArray({
+      control,
+      name: "parrafos",
+    });
+
+  const { fields: subtitulos, append: addSubtitulo, remove: removeSubtitulo } =
+    useFieldArray({
+      control,
+      name: "subtitulos",
+    });
+
+  const [alert, setAlert] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const [images, setImages] = useState<
+    { id: string; file: File; url: string }[]
+  >([]);
+
+  const [mainImage, setMainImage] = useState<{
+    file: File | null;
+    url: string | null;
+  }>({
+    file: null,
+    url: null,
   });
 
-  const { fields: parrafoFields, append: appendParrafo } = useFieldArray({
-    control,
-    name: "parrafos",
-  });
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const additionalFileInputRef = useRef<HTMLInputElement | null>(null);
+  // Estado para manejar las secciones seleccionadas
+  const [selectedSections, setSelectedSections] = useState<string[]>([]);
 
-  const { fields: subtituloFields, append: appendSubtitulo } = useFieldArray({
-    control,
-    name: "subtitulos",
-  });
+  const toggleSection = (id: string) => {
+    const updatedSections = selectedSections.includes(id)
+      ? selectedSections.filter((sec) => sec !== id)
+      : [...selectedSections, id];
+    setSelectedSections(updatedSections);
+    setValue("secciones", updatedSections); // Actualiza el valor en react-hook-form
+  };
 
-  const handleFormSubmit = async (data: FormValues) => {
-    try {
-      await onSubmit(data); // Llama a la función pasada como prop
-      alert("¡Blog creado con éxito!");
-      
-    } catch (error) {
-      console.error("Error al crear el blog:", error);
-      alert("Hubo un error al crear el blog.");
+  // Imagen Principal
+  const handleAddMainImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setMainImage({
+        file,
+        url: URL.createObjectURL(file),
+      });
     }
   };
 
-  return (
+  // Imágenes Adicionales
+  const handleAddImages = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newImages = Array.from(e.target.files).map((file) => ({
+        id: crypto.randomUUID(),
+        file,
+        url: URL.createObjectURL(file),
+      }));
+      setImages((prev) => [...prev, ...newImages]);
+    }
+  };
+
+  const handleRemoveImage = (id: string) => {
+    setImages((prev) => prev.filter((img) => img.id !== id));
+  };
+
+  const handleFormSubmit = async (data: BlogFormData) => {
+    try {
+      const formData = new FormData();
+      formData.append("titulo", data.titulo);
+      formData.append("descripcion", data.descripcion);
+      formData.append("autor", data.autor);
+      formData.append("orden", data.orden.toString());
+
+      if (mainImage.file) {
+        formData.append("imagenPrincipal", mainImage.file);
+      }
+
+      images.forEach((img) => formData.append("imagenes", img.file));
+
+      data.parrafos.forEach((parrafo, index) =>
+        formData.append(`parrafos[${index}][texto]`, parrafo.texto)
+      );
+      data.subtitulos.forEach((subtitulo, index) =>
+        formData.append(`subtitulos[${index}][texto]`, subtitulo.texto)
+      );
+
+      const result = await postNewBlog(formData);
+
+      if (result.ok) {
+        setOpenModal(true); // Mostrar modal
+        reset(); // Reiniciar formulario
+        setImages([]);
+        setMainImage({ file: null, url: null });
+        setAlert({ type: "success", message: result.message });
+      } else {
+        setAlert({ type: "error", message: result.message });
+      }
+    } catch (error) {
+      setAlert({ type: "error", message: "Error al crear el blog." });
+      console.log(error);
+    }
+  };
+
+  return (<>
     <form
-      className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 space-y-6"
       onSubmit={handleSubmit(handleFormSubmit)}
+      className="space-y-6 bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto"
     >
-      <h1 className="text-2xl font-bold text-center">Crear Nuevo Blog</h1>
+      <Typography variant="h3" align="center" fontWeight="bold" gutterBottom>
+        Crear Nuevo Blog
+      </Typography>
 
-      {/* Título */}
-      <div>
-        <label className="block font-bold mb-1">Título</label>
-        <input
-          {...register("titulo", { required: "El título es obligatorio" })}
-          className="w-full border rounded p-2"
-          placeholder="Título del blog"
-        />
-        {errors.titulo && <p className="text-red-500 text-sm">{errors.titulo.message}</p>}
-      </div>
+      <Divider />
 
-      {/* Descripción */}
-      <div>
-        <label className="block font-bold mb-1">Descripción</label>
-        <textarea
-          {...register("descripcion", { required: "La descripción es obligatoria" })}
-          className="w-full border rounded p-2"
-          placeholder="Descripción breve del blog"
-        />
-        {errors.descripcion && <p className="text-red-500 text-sm">{errors.descripcion.message}</p>}
-      </div>
+      <TextField
+        label="Título"
+        {...register("titulo", { required: "El título es obligatorio" })}
+        fullWidth
+      />
 
-      {/* Imagen Principal */}
-      <div>
-        <label className="block font-bold mb-1">Imagen Principal</label>
-        <input
-          {...register("imagen", { required: "La imagen principal es obligatoria" })}
-          className="w-full border rounded p-2"
-          placeholder="URL de la imagen principal"
-        />
-        {errors.imagen && <p className="text-red-500 text-sm">{errors.imagen.message}</p>}
-      </div>
+      <TextField
+        label="Descripción"
+        {...register("descripcion", { required: true })}
+        fullWidth
+        multiline
+        rows={4}
+      />
 
-      {/* Imágenes Dinámicas */}
-      <div>
-        <label className="block font-bold mb-1">Imágenes Adicionales</label>
-        {imagenFields.map((field, index) => (
-          <input
-            key={field.id}
-            {...register(`imagenes.${index}.url`, {
-              required: "La URL de la imagen es obligatoria",
-            })}
-            className="w-full border rounded p-2 mb-2"
-            placeholder={`URL de la imagen ${index + 1}`}
-          />
-        ))}
-        <button
-          type="button"
-          onClick={() => appendImagen({ url: "" })}
-          className="text-blue-500 flex items-center"
-        >
-          <FaPlus className="mr-2" /> Añadir Imagen
-        </button>
-      </div>
+      <TextField
+        label="Autor"
+        {...register("autor", { required: true })}
+        fullWidth
+      />
 
-      {/* Párrafos */}
-      <div>
-        <label className="block font-bold mb-1">Párrafos</label>
-        {parrafoFields.map((field, index) => (
-          <textarea
-            key={field.id}
-            {...register(`parrafos.${index}.texto`, {
-              required: "El párrafo no puede estar vacío",
-            })}
-            className="w-full border rounded p-2 mb-2"
-            placeholder={`Párrafo ${index + 1}`}
-          />
-        ))}
-        <button
-          type="button"
-          onClick={() => appendParrafo({ texto: "" })}
-          className="text-blue-500 flex items-center"
-        >
-          <FaPlus className="mr-2" /> Añadir Párrafo
-        </button>
-      </div>
-
+      <TextField
+        label="Orden"
+        type="number"
+        {...register("orden")}
+        fullWidth
+      />
       {/* Subtítulos */}
-      <div>
-        <label className="block font-bold mb-1">Subtítulos</label>
-        {subtituloFields.map((field, index) => (
-          <input
-            key={field.id}
-            {...register(`subtitulos.${index}.texto`, {
+      <Typography variant="h6" fontWeight="bold">
+        Subtítulos
+      </Typography>
+      {subtitulos.map((field, index) => (
+        <Stack direction="row" spacing={2} key={field.id} alignItems="center">
+          <TextField
+            {...register(`subtitulos.${index}.texto` as const, {
               required: "El subtítulo no puede estar vacío",
             })}
-            className="w-full border rounded p-2 mb-2"
+            fullWidth
             placeholder={`Subtítulo ${index + 1}`}
           />
-        ))}
-        <button
-          type="button"
-          onClick={() => appendSubtitulo({ texto: "" })}
-          className="text-blue-500 flex items-center"
-        >
-          <FaPlus className="mr-2" /> Añadir Subtítulo
-        </button>
-      </div>
-
-      {/* Orden */}
-      <div>
-        <label className="block font-bold mb-1">Orden</label>
-        <input
-          {...register("orden", { valueAsNumber: true })}
-          className="w-full border rounded p-2"
-          type="number"
-          placeholder="Orden de prioridad"
-        />
-      </div>
-
-      {/* Autor */}
-      <div>
-        <label className="block font-bold mb-1">Autor</label>
-        <input
-          {...register("autor", { required: "El autor es obligatorio" })}
-          className="w-full border rounded p-2"
-          placeholder="Nombre del autor"
-        />
-        {errors.autor && <p className="text-red-500 text-sm">{errors.autor.message}</p>}
-      </div>
-
-      {/* Secciones */}
-      <div>
-        <label className="block font-bold mb-1">Secciones</label>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {secciones.map((seccion) => (
-            <label key={seccion.id} className="flex items-center space-x-2">
-              <input {...register("secciones")} type="checkbox" value={seccion.id} />
-              <span>{seccion.nombre}</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {/* Botón de Enviar */}
-      <button
-        type="submit"
-        className="w-full bg-blue-500 text-white font-bold py-2 rounded hover:bg-blue-600"
+          <IconButton onClick={() => removeSubtitulo(index)}>
+            <FaTrashAlt color="red" />
+          </IconButton>
+        </Stack>
+      ))}
+      <Button
+        variant="outlined"
+        startIcon={<AiOutlinePlus />}
+        onClick={() => addSubtitulo({ texto: "" })}
       >
-        Insertar Blog
-      </button>
-    </form>
-  );
-};
+        Añadir Subtítulo
+      </Button>
 
-export default CreateNewBlog;
+      {/* Párrafos */}
+      <Typography variant="h6" fontWeight="bold">
+        Párrafos
+      </Typography>
+      {parrafos.map((field, index) => (
+        <Stack direction="row" spacing={2} key={field.id} alignItems="center">
+          <TextField
+            {...register(`parrafos.${index}.texto` as const, {
+              required: "El párrafo no puede estar vacío",
+            })}
+            fullWidth
+            placeholder={`Párrafo ${index + 1}`}
+          />
+          <IconButton onClick={() => removeParrafo(index)}>
+            <FaTrashAlt color="red" />
+          </IconButton>
+        </Stack>
+      ))}
+      <Button
+        variant="outlined"
+        startIcon={<AiOutlinePlus />}
+        onClick={() => addParrafo({ texto: "" })}
+      >
+        Añadir Párrafo
+      </Button>
+
+
+      {/* Imagen Principal */}
+      <Typography variant="h6" fontWeight="bold">
+        Imagen Principal
+      </Typography>
+      <div className="flex items-center justify-center w-64 h-64 border-2 border-dashed rounded-lg cursor-pointer relative">
+        {mainImage.url ? (
+          <Image
+            src={mainImage.url}
+            alt="Imagen Principal"
+            layout="fill"
+            objectFit="cover"
+            className="rounded-lg"
+          />
+        ) : (
+          <MdAddAPhoto size={40} className="text-gray-400" />
+        )}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleAddMainImage}
+          className="absolute inset-0 opacity-0 cursor-pointer"
+        />
+      </div>
+
+      {/* Imágenes Adicionales */}
+      <Typography variant="h6" fontWeight="bold">
+        Imágenes Adicionales
+      </Typography>
+      <Button
+        variant="outlined"
+        startIcon={<AiOutlinePlus />}
+        onClick={() => additionalFileInputRef.current?.click()}
+      >
+        Añadir Imágenes
+      </Button>
+      <input
+        ref={additionalFileInputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        onChange={handleAddImages}
+        className="hidden"
+      />
+
+      {images.map((img) => (
+        <div key={img.id} className="relative w-32 h-32">
+          <Image src={img.url} alt="Imagen" layout="fill" className="rounded-lg" />
+          <IconButton
+            onClick={() => handleRemoveImage(img.id)}
+            className="absolute top-0 right-0 bg-white"
+          >
+            <FaTrashAlt color="red" />
+          </IconButton>
+        </div>
+      ))}
+
+      <Divider />
+
+      <Typography variant="h6" fontWeight="bold">
+        Secciones
+      </Typography>
+      <Stack direction="row" spacing={2} flexWrap="wrap">
+        {secciones.map((seccion) => (
+          <FormControlLabel
+            key={seccion.id}
+            control={
+              <Checkbox
+                checked={selectedSections.includes(seccion.id)}
+                onChange={() => toggleSection(seccion.id)}
+              />
+            }
+            label={seccion.nombre}
+          />
+        ))}
+      </Stack>
+      <Button type="submit" variant="contained" color="primary" fullWidth>
+        Crear Blog
+      </Button>
+
+      {alert && <Alert severity={alert.type}>{alert.message}</Alert>}
+    </form>
+
+    {/* Modal de éxito */}
+    <Dialog open={openModal} onClose={() => setOpenModal(false)}>
+      <DialogTitle>Blog Creado</DialogTitle>
+      <DialogContent>
+        <Typography>
+          El blog ha sido creado exitosamente.
+        </Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setOpenModal(false)} color="primary">
+          Cerrar
+        </Button>
+      </DialogActions>
+    </Dialog>
+  </>
+
+  );
+}

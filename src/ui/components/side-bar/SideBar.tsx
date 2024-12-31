@@ -10,17 +10,13 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import PeopleIcon from "@mui/icons-material/People";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import AutoAwesomeMotionRoundedIcon from "@mui/icons-material/AutoAwesomeMotionRounded";
 import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import LocalGroceryStoreRoundedIcon from "@mui/icons-material/LocalGroceryStoreRounded";
 import { FaMoneyBillTransfer } from "react-icons/fa6";
-import { FaBookmark, FaBookOpen, FaPhotoVideo, FaUserEdit } from "react-icons/fa";
-import { IoMdPhotos } from "react-icons/io";
-import { IoDocument } from "react-icons/io5";
-import { SiReadthedocs } from "react-icons/si";
+import {  FaBookOpen } from "react-icons/fa";
 import { AiFillProduct } from "react-icons/ai";
 import LoginRoundedIcon from "@mui/icons-material/LoginRounded";
 import { useSession, signIn, signOut } from "next-auth/react";
@@ -43,20 +39,21 @@ const menuConfig: Record<
   }[]
 > = {
   admin: [
-    { name: "Perfil", link: "/profile", icon: <PeopleIcon /> },
-    { name: "Productos", link: "/productos", icon: <MenuBookRoundedIcon /> },
-    { name: "Órdenes", link: "/dashboard/orders", icon: <AutoAwesomeMotionRoundedIcon /> },
+    // { name: "Perfil", link: "/profile", icon: <PeopleIcon /> },
     { name: "Dashboard", link: "/dashboard", icon: <DashboardIcon /> },
-    { name: "Secciones", link: "/dashboard/sections", icon: <FaBookOpen /> },
-    { name: "Blogs", link: "/dashboard/blog", icon: <SiReadthedocs /> },
-    { name: "Nuevo Blog", link: "/dashboard/blog/newBlog", icon: <IoDocument /> },
-    { name: "Nueva sección", link: "/dashboard/newSection", icon: <FaBookmark /> },
-    { name: "Galería de imágenes", link: "/dashboard/galleryImages", icon: <IoMdPhotos /> },
-    { name: "Galería de videos", link: "/dashboard/galleryVideos", icon: <FaPhotoVideo /> },
-    { name: "Gestionar productos", link: "/dashboard/productos", icon: <MdDashboardCustomize /> },
+    { name: "Productos", link: "/productos", icon: <MenuBookRoundedIcon /> },
     { name: "Nuevo producto", link: "/dashboard/productos/newProduct", icon: <MdAddBusiness /> },
+    { name: "Órdenes", link: "/dashboard/orders", icon: <AutoAwesomeMotionRoundedIcon /> },
+    { name: "Secciones", link: "/dashboard/sections", icon: <FaBookOpen /> },
+    { name: "Gestionar productos", link: "/dashboard/productos", icon: <MdDashboardCustomize /> },
     { name: "Transacciones", link: "/dashboard/transacciones", icon: <FaMoneyBillTransfer /> },
-    { name: "Usuarios", link: "/dashboard/users", icon: <FaUserEdit /> },
+    // { name: "Blogs", link: "/dashboard/blog", icon: <SiReadthedocs /> },
+    // { name: "Nuevo Blog", link: "/dashboard/blog/newBlog", icon: <IoDocument /> },
+    // { name: "Nueva sección", link: "/dashboard/newSection", icon: <FaBookmark /> },
+    // { name: "Galería de imágenes", link: "/dashboard/galleryImages", icon: <IoMdPhotos /> },
+    // { name: "Galería de videos", link: "/dashboard/galleryVideos", icon: <FaPhotoVideo /> },
+    // { name: "Servicios", link: "/dashboard/servicios", icon: <MdMiscellaneousServices /> },
+    // { name: "Usuarios", link: "/dashboard/users", icon: <FaUserEdit /> },
 
   ],
   user: [

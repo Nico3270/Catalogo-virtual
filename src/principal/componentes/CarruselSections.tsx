@@ -46,13 +46,13 @@ export const CarruselSections: React.FC<Props> = ({ secciones }) => {
           <SwiperSlide key={index}>
             <article className="relative w-full h-[400px] md:h-[500px] lg:h-[800px]">
               <Link
-                href={`/seccion/${seccion.url}`}
+                href={seccion.url}
                 title={`Explora más sobre ${seccion.titulo}`}
                 className="group"
               >
                 {/* Imagen del producto */}
                 <Image
-                  src={`/${seccion.imagen}`}
+                  src={`${seccion.imagen}`}
                   alt={`Detalles sobre ${seccion.titulo}`}
                   fill
                   className="rounded-lg object-cover"

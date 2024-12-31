@@ -216,3 +216,45 @@ enum Role {
   user
 }
 
+// prisma/schema.prisma
+model Service {
+  id          String   @id @default(uuid())       // ID único
+  titulo      String                              // Título del servicio
+  descripcion String                              // Descripción del servicio
+  imagen      String                              // URL de la imagen
+  slug        String   @unique                    // Slug único
+  isActive    Boolean  @default(true)             // Estado (activo/inactivo)
+  createdAt   DateTime @default(now())            // Fecha de creación
+  updatedAt   DateTime @updatedAt                 // Fecha de actualización
+}
+
+
+model Testimonial {
+  id          String   @id @default(uuid())
+  imagen      String   // URL de la imagen
+  titulo      String   // Título del testimonio (ej: nombre)
+  descripcion String   // Descripción o frase motivadora
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+
+model Tarjeta {
+  id          String   @id @default(uuid())
+  titulo      String
+  descripcion String
+  imagen      String  // URL de la imagen
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+
+model CarruselSection {
+  id          String   @id @default(uuid())
+  titulo      String
+  descripcion String
+  imagen      String
+  url         String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
