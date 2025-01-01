@@ -1,6 +1,7 @@
 
 import { RegisterForm } from "@/auth/componentes/RegisterForm";
 import Image from "next/image";
+import { InfoEmpresa as empresa } from "@/config/config";
 
 export default function RegisterPage() {
   
@@ -14,7 +15,7 @@ export default function RegisterPage() {
       {/* Columna derecha - Imagen */}
       <div className="md:w-1/2 relative hidden md:block bg-gray-100">
         <Image
-          src="/imgs/register_image.webp" // Coloca aquí la ruta de la imagen del restaurante
+          src={empresa.imagenesPlaceholder.registerPage} // Coloca aquí la ruta de la imagen del restaurante
           alt="Imagen de registro para aplicación de Detalles, sorpresas y regalos para ocasiones especiales"
           fill
           style={{ objectFit: "cover" }} // Ajuste para que la imagen no cubra el contenido

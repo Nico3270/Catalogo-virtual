@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaEdit } from "react-icons/fa";
-
+import { InfoEmpresa as empresa } from "@/config/config";
 export interface Testimonial {
   id: string;
   imagen: string;
@@ -38,7 +38,7 @@ const ListTestimonials: React.FC<ListTestimonialsProps> = ({ testimonios }) => {
               <td className="p-3">
                 <div className="w-20 h-20 relative rounded-md overflow-hidden border border-gray-300">
                   <Image
-                    src={testimonio.imagen || "/imgs/image_not_found.webp"}
+                    src={testimonio.imagen || empresa.imagenesPlaceholder.notfound}
                     alt={testimonio.titulo}
                     layout="fill"
                     objectFit="cover"

@@ -37,7 +37,7 @@ interface ProductFormData {
 }
 
 export default function CreateNewProduct({ allSections }: CreateNewProductProps) {
-  const { register, handleSubmit, control } = useForm<ProductFormData>({
+  const { register, handleSubmit, control, setValue, watch } = useForm<ProductFormData>({
     defaultValues: {
       nombre: "",
       precio: 0,
@@ -54,6 +54,29 @@ export default function CreateNewProduct({ allSections }: CreateNewProductProps)
   const [selectedSections, setSelectedSections] = useState<Set<string>>(new Set());
   const [images, setImages] = useState<{ id: string; file: File; url: string }[]>([]);
 
+  // Generar slug automático
+  const generateSlug = (title: string) => {
+    const randomId = Math.random().toString(36).substring(2, 6);  // Genera 4 caracteres aleatorios
+    const slug = title
+      .toLowerCase()
+      .normalize("NFD")  // Elimina tildes
+      .replace(/[\u0300-\u036f]/g, "")  // Quita diacríticos (acentos)
+      .replace(/[^\w\s-]/g, "")  // Quita caracteres especiales
+      .trim()
+      .replace(/\s+/g, "-");  // Reemplaza espacios por guiones
+
+    return `${slug}-${randomId}`;  // Agrega el identificador único
+  };
+  // Observa el campo "nombre" para generar el slug automáticamente
+  const nombreProducto = watch("nombre");
+
+  React.useEffect(() => {
+    if (nombreProducto) {
+      const nuevoSlug = generateSlug(nombreProducto);
+      setValue("slug", nuevoSlug, { shouldValidate: true });
+    }
+  }, [nombreProducto, setValue]);
+
   const onSubmit = async (data: ProductFormData) => {
     try {
       const formData = new FormData();
@@ -61,7 +84,7 @@ export default function CreateNewProduct({ allSections }: CreateNewProductProps)
       formData.append("precio", data.precio.toString());
       formData.append("descripcion", data.descripcion);
       formData.append("descripcionCorta", data.descripcionCorta);
-      formData.append("slug", data.slug.toLowerCase().replace(/ /g, "-").trim());
+      formData.append("slug", data.slug);
       formData.append("prioridad", data.prioridad.toString());
       formData.append("status", data.status);
       formData.append("tags", data.tags);
@@ -117,9 +140,21 @@ export default function CreateNewProduct({ allSections }: CreateNewProductProps)
       <TextField label="Precio" type="number" {...register("precio", { required: true })} fullWidth />
       <TextField label="Descripción" {...register("descripcion", { required: true })} fullWidth multiline rows={4} />
       <TextField label="Descripción Corta" {...register("descripcionCorta")} fullWidth />
-      <TextField label="Slug" {...register("slug", { required: true })} fullWidth />
-      <TextField label="Prioridad" type="number" {...register("prioridad")} fullWidth />
+      {/* Campo de Slug (Agrupado con FormControl para mejor alineación) */}
+      <FormControl fullWidth margin="normal">
+        <FormLabel>Slug</FormLabel>
+        <TextField
+          {...register("slug")}
+          fullWidth
+          InputProps={{
+            readOnly: true,
+          }}
+        />
+      </FormControl>
+      <FormControl fullWidth margin="normal">
 
+        <TextField label="Prioridad" type="number" {...register("prioridad")} fullWidth />
+      </FormControl>
       <FormControl>
         <FormLabel>Estado</FormLabel>
         <Controller

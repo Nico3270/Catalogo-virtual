@@ -1,6 +1,7 @@
 "use client";
 
-import { RubikFont } from "@/config/fonts";
+
+import { titulosPrincipales } from "@/config/fonts";
 import { CarruselSections} from "./CarruselSections";
 import RedesSocialesContact from "./RedesSocialesContact";
 import Testimonials from "./Testimonials";
@@ -26,7 +27,7 @@ interface PrincipalSectionProps {
 const PrincipalSection : React.FC<PrincipalSectionProps> = ({ testimonios, secciones }) => {
   return (
     <section className="container mx-auto px-1">
-      <h1 className={`text-4xl font-bold text-center text-[#D91656] mb-4 mt-2 ${RubikFont.className}`}>
+      <h1 className={`text-4xl font-bold text-center color-titulo-tarjeta mb-4 mt-2 ${titulosPrincipales.className}`}>
         Somos Detalles Sorpresas y Regalos
       </h1>
      

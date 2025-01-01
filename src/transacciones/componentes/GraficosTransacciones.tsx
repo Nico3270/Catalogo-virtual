@@ -5,7 +5,7 @@ import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, TooltipItem } from "chart.js";
 import { Transaction } from "@/transacciones/interfaces/types";
 import { subDays, startOfMonth, startOfYear, isAfter, isBefore } from "date-fns";
-import { RubikFont, Sour_Gummy_Font } from "@/config/fonts";
+import {  SeccionesFont, titulosPrincipales} from "@/config/fonts";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -134,7 +134,7 @@ const GraficosTransacciones: React.FC<GraficosTransaccionesProps> = ({ transacti
 
     return (
         <div>
-            <h1 className={`text-center pb-6 text-2xl font-bold text-[#E73879] ${RubikFont.className}`}>Resumen de transacciones</h1>
+            <h1 className={`text-center pb-6 text-2xl font-bold color-titulo-tarjeta ${titulosPrincipales.className}`}>Resumen de transacciones</h1>
             {/* Filtros */}
             <div className="mb-6 flex flex-wrap gap-4 items-center justify-center">
                 <button
@@ -183,7 +183,7 @@ const GraficosTransacciones: React.FC<GraficosTransaccionesProps> = ({ transacti
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* Ingresos */}
                 <div className="bg-white shadow-lg rounded-lg p-6">
-                    <h2 className={`text-2xl font-bold text-center mb-4 ${Sour_Gummy_Font.className} text-[#640D5F]`}>Ingresos</h2>
+                    <h2 className={`text-2xl font-bold text-center mb-4 ${SeccionesFont.className} text-[#640D5F]`}>Ingresos</h2>
                     <Pie data={datosIngresos} options={opcionesGrafico} />
                     <div className="mt-4">
                         {ingresosPorCategoria.categorias.map((cat, index) => (
@@ -208,7 +208,7 @@ const GraficosTransacciones: React.FC<GraficosTransaccionesProps> = ({ transacti
 
                 {/* Gastos */}
                 <div className="bg-white shadow-lg rounded-lg p-6">
-                    <h2 className={`text-2xl font-bold text-center mb-4 ${Sour_Gummy_Font.className} text-[#640D5F]`}>Gastos</h2>
+                    <h2 className={`text-2xl font-bold text-center mb-4 ${SeccionesFont.className} text-[#640D5F]`}>Gastos</h2>
                     <Pie data={datosGastos} options={opcionesGrafico} />
                     <div className="mt-4">
                         {gastosPorCategoria.categorias.map((cat, index) => (
@@ -233,7 +233,7 @@ const GraficosTransacciones: React.FC<GraficosTransaccionesProps> = ({ transacti
                 {/* Balance */}
                 <div className="bg-white shadow-lg rounded-lg p-6">
                     <h2
-                        className={`text-2xl font-bold text-center mb-4 ${Sour_Gummy_Font.className} text-[#640D5F]`}
+                        className={`text-2xl font-bold text-center mb-4 ${SeccionesFont.className} text-[#640D5F]`}
                     >
                         Balance
                     </h2>

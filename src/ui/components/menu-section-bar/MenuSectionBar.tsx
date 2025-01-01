@@ -5,12 +5,23 @@ import { getSectionsFromDB } from "@/seccion/actions/getSectionsFromDB";
 import Link from "next/link";
 import React, { useEffect, useState, useRef } from "react";
 import { Section } from "@/seccion/actions/getSectionsFromDB";
-import * as FaIcons from "react-icons/fa";
-import * as IoIcons from "react-icons/io";
-import * as GiIcons from "react-icons/gi";
-import * as MdIcons from "react-icons/md";
-import * as IoIcons5 from "react-icons/io5";
+import * as FaIcons from "react-icons/fa";   // Font Awesome
+import * as IoIcons from "react-icons/io";   // Ionicons 4
+import * as IoIcons5 from "react-icons/io5"; // Ionicons 5
+import * as GiIcons from "react-icons/gi";   // Game Icons
+import * as MdIcons from "react-icons/md";   // Material Design Icons
 import * as iconsTb from "react-icons/tb";
+import * as TbIcons from "react-icons/tb";   // Tabler Icons
+import * as FiIcons from "react-icons/fi";   // Feather Icons
+import * as RiIcons from "react-icons/ri";   // Remix Icons
+import * as BiIcons from "react-icons/bi";   // BoxIcons
+import * as AiIcons from "react-icons/ai";   // Ant Design Icons
+import * as BsIcons from "react-icons/bs";   // Bootstrap Icons
+import * as CgIcons from "react-icons/cg";   // CSS.gg Icons
+import * as HiIcons from "react-icons/hi";   // Heroicons 4
+import * as HiIcons2 from "react-icons/hi2"; // Heroicons 5
+import * as Fa6Icons from "react-icons/fa6"; // Font Awesome 6 (Regular, Solid, Brands)
+
 
 export const MenuSectionsBar = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -29,13 +40,15 @@ export const MenuSectionsBar = () => {
   }, []);
 
   // Combina todos los conjuntos de íconos
-  const IconSets = { ...FaIcons, ...IoIcons, ...GiIcons, ...MdIcons, ...IoIcons5, ...iconsTb };
+  const IconSets = { ...FaIcons, ...IoIcons, ...GiIcons, ...MdIcons, ...IoIcons5, ...iconsTb, ...TbIcons, ...FiIcons, ...RiIcons, ...BiIcons, ...AiIcons, ...BsIcons, 
+    ...CgIcons, ...HiIcons, ...HiIcons2, ...Fa6Icons
+   };
 
   return (
-    <div className="relative w-full bg-[#f7ede2]">
+    <div className="relative w-full color-fondo-principal">
       <div
         ref={scrollContainerRef}
-        className="flex overflow-x-auto space-x-6 p-4 w-full bg-[#f8edeb] rounded-lg no-scrollbar justify-around md:justify-around"
+        className="flex overflow-x-auto space-x-6 p-4 w-full  rounded-lg no-scrollbar justify-around md:justify-around color-principal"
         style={{ scrollBehavior: "smooth", whiteSpace: "nowrap" }}
       >
         {sections.length === 0
@@ -57,9 +70,9 @@ export const MenuSectionsBar = () => {
                 
                 <Link key={section.id} href={`/seccion/${section.href}`}>
                   <div className="flex flex-col items-center text-center min-w-[80px] max-w-[100px] md:min-w-0">
-                    <IconComponent className="text-xl text-[#4a4e69] hover:text-[#b23a48]" />
+                    <IconComponent className="text-xl color-iconos" />
                     <span
-                      className={`text-sm mt-2 hover:text-[#b23a48] break-words text-[#4a4e69] ${titleFont.className}`}
+                      className={`text-sm mt-2  break-words ${titleFont.className} color-iconos`}
                     >
                       {section.name}
                     </span>

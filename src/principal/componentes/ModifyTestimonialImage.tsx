@@ -5,6 +5,7 @@ import Image from "next/image";
 import { uploadImageToCloudinary, deleteImageFromCloudinary } from "../actions/testimonialActions";
 import { Modal, Box, Typography, Button, CircularProgress } from "@mui/material";
 import { FaUpload } from "react-icons/fa";
+import { InfoEmpresa as empresa } from "@/config/config";
 
 interface ModifyTestimonialImageProps {
   testimonialId: string;
@@ -64,7 +65,7 @@ const ModifyTestimonialImage: React.FC<ModifyTestimonialImageProps> = ({
     <div className="flex flex-col items-center gap-4">
       <div className="relative w-40 h-40 rounded-full overflow-hidden border-2 border-gray-300">
         <Image
-          src={previewImage || "/imgs/image_not_found.webp"}
+          src={previewImage || empresa.imagenesPlaceholder.notfound}
           alt="Testimonio"
           fill
           className="object-cover"

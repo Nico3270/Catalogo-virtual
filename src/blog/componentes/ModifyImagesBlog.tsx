@@ -5,7 +5,7 @@ import Image from "next/image";
 import { FaTrashAlt, FaPlus } from "react-icons/fa";
 import { Modal, Box, Typography, Button, CircularProgress } from "@mui/material";
 import { deleteImageFromBlog, uploadImages } from "../actions/blogImageActions";
-
+import { InfoEmpresa as empresa } from "@/config/config";
 interface ModifyImagesBlogProps {
   blogId: string;
   imagenPrincipal: string;
@@ -98,7 +98,7 @@ const ModifyImagesBlog: React.FC<ModifyImagesBlogProps> = ({
       </Typography>
       <div className="relative w-64 h-64 border-2 border-dashed">
         <Image
-          src={previewMainImage || "/imgs/image_not_found.webp"}
+          src={previewMainImage || empresa.imagenesPlaceholder.notfound}
           alt="Imagen Principal"
           layout="fill"
           objectFit="cover"

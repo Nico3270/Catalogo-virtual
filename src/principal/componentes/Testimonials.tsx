@@ -9,7 +9,7 @@ import Image from "next/image";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { DeliusFont, OldenburgFont, RubikFont } from "@/config/fonts";
+import {  SeccionesFont, titleFont, titulosPrincipales } from "@/config/fonts";
 
 // Interfaz para los datos del carrusel
 export interface Testimonial {
@@ -27,7 +27,7 @@ const Testimonials: React.FC<Props> = ({ testimonios }) => {
     <div className="w-full h-full bg-gradient-to-b from-[#f8f9fa] to-[#e9ecef] p-1 rounded-lg shadow-lg">
       {/* Encabezado */}
       <div className="text-center mb-4">
-        <h2 className={`text-4xl font-extrabold text-[#D91656] ${RubikFont.className}`}>Nuestros clientes</h2> 
+        <h2 className={`text-4xl font-extrabold color-titulos ${titulosPrincipales.className}`}>Nuestros clientes</h2> 
       </div>
       <Swiper
         spaceBetween={20}
@@ -57,10 +57,10 @@ const Testimonials: React.FC<Props> = ({ testimonios }) => {
 
               {/* Título y descripción */}
               <div className="w-full">
-                <h3 className={`text-xl md:text-2xl font-bold text-[#D91656] ${DeliusFont.className}`}>
+                <h3 className={`text-xl md:text-2xl font-bold color-titulo-tarjeta ${SeccionesFont.className}`}>
                   {testimonio.titulo}
                 </h3>
-                <p className={`text-sm md:text-base text-gray-700 mt-2 mb-8 ${OldenburgFont.className}`}>
+                <p className={`text-sm md:text-base color-descripcion-tarjeta mt-2 mb-8 ${titleFont.className}`}>
                   {testimonio.descripcion}
                 </p>
               </div>

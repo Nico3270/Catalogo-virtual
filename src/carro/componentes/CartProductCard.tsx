@@ -55,7 +55,7 @@ export const CartProductCard: React.FC<CartProductCardProps> = ({ product }) => 
       {/* Detalles del producto */}
       <div className="flex-grow mt-4 lg:mt-0 lg:ml-4">
         <div className="flex justify-between items-start lg:items-center w-full">
-          <h2 className="text-lg lg:text-2xl text-[#f07167] font-bold break-words">
+          <h2 className="text-lg lg:text-2xl color-titulo-tarjeta font-bold break-words">
             {product.nombre}
           </h2>
           <button
@@ -76,7 +76,7 @@ export const CartProductCard: React.FC<CartProductCardProps> = ({ product }) => 
 
         {/* Precio y cantidad */}
         <div className="flex justify-between items-center mt-4">
-          <div className="text-lg text-red-600 font-bold">
+          <div className="text-lg color-titulo-tarjeta font-bold">
             Total: <Precio value={total} />
           </div>
           <QuantitySelector

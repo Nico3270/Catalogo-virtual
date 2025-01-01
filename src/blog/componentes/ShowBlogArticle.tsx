@@ -1,7 +1,7 @@
 import { Articulo } from "@/secondary/componentes/BlogArticulos";
 import React from "react";
 import Image from "next/image";
-import { LatoFont, Sour_Gummy_Font } from "@/config/fonts";
+import { LatoFont, SeccionesFont, titleFont } from "@/config/fonts";
 
 interface ShowBlogArticleProps {
   article: Articulo;
@@ -14,7 +14,7 @@ const ShowBlogArticle: React.FC<ShowBlogArticleProps> = ({ article }) => {
       <div className="mb-6">
         <Image
           src={article.imagen}
-          alt={article.titulo}
+          alt={`Imagen destacada - ${article.titulo}`}
           width={1280}
           height={400}
           className="w-full h-72 object-cover rounded-lg"
@@ -24,10 +24,16 @@ const ShowBlogArticle: React.FC<ShowBlogArticleProps> = ({ article }) => {
 
       {/* Título y detalles */}
       <header className="mb-8">
-        <h1 className={`text-4xl font-bold text-[#EB5B00] ${Sour_Gummy_Font.className}`}>{article.titulo}</h1>
-        <p className="text-gray-600 mt-2">
+        <h1 className={`text-4xl font-bold color-titulos ${SeccionesFont.className}`}>
+          {article.titulo}
+        </h1>
+        <p className={`color-descripcion-tarjeta mt-2 ${titleFont.className}`}>
           Por <span className="font-semibold">{article.autor}</span> el{" "}
-          {new Date(article.fechaPublicacion).toLocaleDateString()}
+          {new Date(article.fechaPublicacion).toLocaleDateString("es-ES", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
         </p>
       </header>
 
@@ -35,22 +41,27 @@ const ShowBlogArticle: React.FC<ShowBlogArticleProps> = ({ article }) => {
       <section className="space-y-8">
         {article.parrafos.map((parrafo, index) => (
           <React.Fragment key={index}>
-            {article.subtitulos[index] && (
-              <h2 className={`text-2xl font-semibold text-[#D91656] ${Sour_Gummy_Font.className}`}>
+            {article.subtitulos[index] && parrafo && (
+              <h2
+                className={`text-2xl font-semibold color-secundario ${SeccionesFont.className}`}
+              >
                 {article.subtitulos[index]}
               </h2>
             )}
-            <p className={`text-lg text-gray-700 ${LatoFont.className}`}>{parrafo}</p>
+            <p className={`text-lg color-descripcion-tarjeta ${LatoFont.className}`}>
+              {parrafo}
+            </p>
 
             {/* Imágenes adicionales */}
             {article.imagenes[index] && (
               <div className="my-4">
                 <Image
                   src={article.imagenes[index]}
-                  alt={`Imagen relacionada con ${article.titulo}`}
+                  alt={`Imagen relacionada con "${article.subtitulos[index] || article.titulo}"`}
                   width={800}
                   height={450}
                   className="w-full object-cover rounded-lg shadow-md"
+                  loading="lazy" // Carga diferida
                 />
               </div>
             )}

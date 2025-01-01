@@ -11,7 +11,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./slideshow.css";
-import { DeliusFont, Sour_Gummy_Font } from "@/config/fonts";
+import {  titleFont, titulosCarrusel } from "@/config/fonts";
 
 // Interface para las secciones
 export interface Section {
@@ -60,12 +60,12 @@ export const CarruselSections: React.FC<Props> = ({ secciones }) => {
                 {/* Contenedor de texto superpuesto */}
                 <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/90 to-black/50 p-6 text-white">
                   <h3
-                    className={`text-2xl font-extrabold text-[#FFCCEA] drop-shadow-md group-hover:text-[#FFD700] ${DeliusFont.className}`}
+                    className={`text-2xl font-extrabold color-titulo-carrusel ${titulosCarrusel.className}`}
                   >
                     {seccion.titulo}
                   </h3>
                   <p
-                    className={`text-md text-[#FBFBFB] font-medium mt-2 drop-shadow-sm group-hover:text-[#FFFACD] ${Sour_Gummy_Font.className}`}
+                    className={`text-md  font-medium mt-2 drop-shadow-sm color-texto-carrusel ${titleFont.className}`}
                   >
                     {seccion.descripcion}
                   </p>

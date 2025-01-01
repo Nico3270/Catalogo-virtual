@@ -5,6 +5,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import { useCartCatalogoStore } from "@/store/carro/carro-store";
 import { Precio } from "@/seccion/componentes/Precio";
+import { titleFont } from "@/config/fonts";
 
 export const OrderSummaryWithActions = () => {
   const [isMounted, setIsMounted] = useState(false); // Asegura que el componente se renderice solo en el cliente
@@ -22,11 +23,11 @@ export const OrderSummaryWithActions = () => {
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Resumen de tu Orden</h2>
+      <h2 className={`text-2xl font-bold color-descripcion-tarjeta mb-6 text-center ${titleFont.className}`}>Resumen de tu Orden</h2>
 
       {totalItems === 0 ? (
         <div className="text-center">
-          <p className="text-lg text-gray-500 mb-4">No tienes productos en tu carrito.</p>
+          <p className="text-lg color-descripcion-tarjeta mb-4">No tienes productos en tu carrito.</p>
           <Link href="/productos">
             <button className="mt-4 px-6 py-2 text-white font-bold rounded-lg bg-[#be95c4] hover:bg-[#a373b3] transition-colors">
               Explorar Productos
@@ -45,7 +46,7 @@ export const OrderSummaryWithActions = () => {
             href="/address"
             className={clsx(
               "block text-center px-6 py-2 font-bold text-white rounded-lg transition-colors",
-              "bg-[#be95c4] hover:bg-[#a373b3]"
+              "color-boton-agregar"
             )}
           >
             Continuar con la orden

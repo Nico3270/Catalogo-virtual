@@ -5,7 +5,7 @@ import Image from "next/image";
 import clsx from "clsx";
 import { ImageGalleryItem, VideoGalleryItem } from "../interfaces/types";
 import CarruselVideoGallery from "./CarruselVideoGallery";
-import { LatoFont, RubikFont, Sour_Gummy_Font } from "@/config/fonts";
+import { LatoFont,  SeccionesFont,  titleFont, titulosPrincipales } from "@/config/fonts";
 
 interface GalleryComponentProps {
   videos: VideoGalleryItem[];
@@ -28,11 +28,11 @@ const GalleryComponent: React.FC<GalleryComponentProps> = ({ videos, images }) =
       <header className="text-center">
         <h1
           id="gallery-title"
-          className={`text-4xl md:text-5xl font-extrabold text-[#D91656] mb-4 ${RubikFont.className}`}
+          className={`text-4xl md:text-5xl font-extrabold  mb-4 ${titulosPrincipales.className} color-titulos `}
         >
           Galería de Inspiración
         </h1>
-        <p className="text-lg text-gray-600">
+        <p className={`text-lg color-descripcion-tarjeta ${titleFont.className}`}>
           Descubre nuestras sorpresas, detalles y regalos únicos para cada ocasión especial.
         </p>
       </header>
@@ -46,11 +46,11 @@ const GalleryComponent: React.FC<GalleryComponentProps> = ({ videos, images }) =
       <div className="w-full">
         <h1
           id="imagenes-inspiradoras"
-          className={`text-4xl md:text-5xl text-center font-extrabold text-[#D91656] mb-4 ${RubikFont.className}`}
+          className={`text-4xl md:text-5xl text-center font-extrabold  mb-4 ${titulosPrincipales.className} color-titulos `}
         >
           Imágenes inspiradoras
         </h1>
-        <p className="text-lg text-gray-600 text-center">
+        <p className={`text-lg color-descripcion-tarjeta ${titleFont.className}`}>
           Descubre nuestras sorpresas, detalles y regalos únicos para cada ocasión especial.
         </p>
         <div
@@ -115,7 +115,7 @@ const GalleryComponent: React.FC<GalleryComponentProps> = ({ videos, images }) =
               />
             </div>
             <div className="mt-4 text-center">
-              <h3 className={`text-2xl font-bold text-[#D91656] ${Sour_Gummy_Font.className}`}>
+              <h3 className={`text-2xl font-bold text-[#D91656] ${SeccionesFont.className}`}>
                 {selectedImage.title}
               </h3>
               <p className={`text-[#640D5F] mt-2 ${LatoFont.className} text-lg`}>

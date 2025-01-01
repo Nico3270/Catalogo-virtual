@@ -6,6 +6,7 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import { uploadImageToCloudinary, createTestimonial } from "../actions/testimonialActions";
 import { CircularProgress, Modal, Box, Typography, Button } from "@mui/material";
 import Image from "next/image";
+import ListTestimonials from "./ListTestimonials";
 
 interface NewTestimonialForm {
   titulo: string;
@@ -13,11 +14,24 @@ interface NewTestimonialForm {
   imagen: FileList;
 }
 
-const NewTestimonial = () => {
+interface NewTestimonialProps {
+  initialTestimonials: Testimonial[];  // Testimonios iniciales
+}
+
+interface Testimonial {
+  id: string;
+  titulo: string;
+  descripcion: string;
+  imagen: string;
+}
+
+
+const NewTestimonial: React.FC<NewTestimonialProps> = ({ initialTestimonials }) => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [testimonios, setTestimonios] = useState<Testimonial[]>(initialTestimonials); // Estado para lista de testimonios
 
   const {
     register,
@@ -37,29 +51,33 @@ const NewTestimonial = () => {
   // Lógica para enviar formulario
   const onSubmit = async (data: NewTestimonialForm) => {
     if (!data.imagen[0]) return;
-
+  
     setLoading(true);
     try {
       const imageUrl = await uploadImageToCloudinary(data.imagen[0]);
-
+  
       // Crear el testimonio en la base de datos
-      await createTestimonial({
+      const newTestimonial: Testimonial = await createTestimonial({
         titulo: data.titulo,
         descripcion: data.descripcion,
         imagen: imageUrl,
       });
-
+  
+      // Actualizar lista de testimonios localmente
+      setTestimonios((prev) => [newTestimonial, ...prev]);  // 👈 Agrega el nuevo testimonio al estado
+  
       setModalMessage("Testimonio creado exitosamente");
       reset();
       setPreviewImage(null);
     } catch (error) {
       setModalMessage("Hubo un error al crear el testimonio");
-      console.error(error)
+      console.error(error);
     } finally {
       setLoading(false);
       setModalOpen(true);
     }
   };
+  
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
@@ -118,6 +136,12 @@ const NewTestimonial = () => {
           </button>
         </div>
       </form>
+
+
+      {/* Listado de testimonios */}
+      <div className="mt-10">
+        <ListTestimonials testimonios={testimonios} />
+      </div>
 
       {/* Modal de confirmación */}
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>

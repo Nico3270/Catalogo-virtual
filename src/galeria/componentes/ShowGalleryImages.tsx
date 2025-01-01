@@ -22,7 +22,8 @@ import { updateImagesOrder } from "@/galeria/actions/updateImagesOrder";
 import { uploadImageToCloudinary } from "../actions/uploadImageToCloudinary";
 import { SortableRow } from "./SortableRow";
 import { FiMove, FiUploadCloud } from "react-icons/fi";
-import { RubikFont } from "@/config/fonts";
+import { titulosPrincipales } from "@/config/fonts";
+
 
 interface ShowGalleryImagesProps {
   initialImages: ImageGalleryItem[];
@@ -123,7 +124,7 @@ const ShowGalleryImages: React.FC<ShowGalleryImagesProps> = ({ initialImages }) 
 
   return (
     <div className="w-full bg-white rounded-lg shadow-md p-6">
-      <h1 className={`text-2xl font-bold mb-4 text-center text-[#D91656] ${RubikFont.className}`}>
+      <h1 className={`text-2xl font-bold mb-4 text-center color-titulo-tarjeta ${titulosPrincipales.className}`}>
         Administración de imágenes de la galería
       </h1>
 

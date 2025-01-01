@@ -3,6 +3,7 @@
 
 import { LoginForm } from "@/auth/componentes/LoginForm";
 import Image from "next/image";
+import { InfoEmpresa as empresa } from "@/config/config";
 
 export default function LoginPage() {
   return (
@@ -13,7 +14,7 @@ export default function LoginPage() {
       {/* Columna derecha - Imagen */}
       <div className="md:w-1/2 relative hidden md:block bg-gray-100">
         <Image
-          src="/imgs/login_image.webp" // Coloca aquí la ruta de la imagen del restaurante
+          src={empresa.imagenesPlaceholder.loginPage} // Coloca aquí la ruta de la imagen del restaurante
           alt="Imagen de Restaurante"
           fill
           style={{ objectFit: "cover" }} // Asegura que la imagen cubra el espacio correctamente

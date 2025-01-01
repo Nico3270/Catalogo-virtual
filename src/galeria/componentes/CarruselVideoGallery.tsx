@@ -8,6 +8,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { VideoGalleryItem } from "../interfaces/types";
+import { SeccionesFont, titleFont } from "@/config/fonts";
 
 interface CarruselVideoGalleryProps {
   videos: VideoGalleryItem[];
@@ -99,10 +100,10 @@ const CarruselVideoGallery: React.FC<CarruselVideoGalleryProps> = ({ videos }) =
 
                 {/* Caja con título y descripción debajo del video */}
                 <div className="mt-4 w-full p-4 sm:p-6 bg-white rounded-lg shadow-md">
-                  <h3 className="text-lg md:text-2xl font-bold text-gray-800 text-center">
+                  <h3 className={`text-lg md:text-2xl font-bold color-titulo-tarjeta text-center ${SeccionesFont.className} `}>
                     {video.title}
                   </h3>
-                  <p className="text-sm md:text-base text-gray-600 mt-2 text-center">
+                  <p className={`text-sm md:text-base color-descripcion-tarjeta mt-2 text-center ${titleFont.className}`}>
                     {video.description}
                   </p>
                 </div>

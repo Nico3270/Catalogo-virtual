@@ -15,7 +15,7 @@ export const QuantitySelector: React.FC<QuantitySelectorProps> = ({ inicio, onQu
     <div className="flex items-center space-x-2">
       <button
         onClick={() => handleQuantityChange(inicio - 1)} // Usamos `inicio` directamente
-        className="px-3 py-1 bg-[#9f86c0] hover:bg-[#e0b1cb] text-white rounded-l-lg"
+        className="px-3 py-1 color-boton-agregar texto-boton rounded-l-lg"
       >
         -
       </button>
@@ -27,7 +27,7 @@ export const QuantitySelector: React.FC<QuantitySelectorProps> = ({ inicio, onQu
       />
       <button
         onClick={() => handleQuantityChange(inicio + 1)} // Usamos `inicio` directamente
-        className="px-3 py-1 bg-[#9f86c0] hover:bg-[#e0b1cb] text-white rounded-r-lg"
+        className="px-3 py-1 color-boton-agregar texto-boton rounded-r-lg"
       >
         +
       </button>

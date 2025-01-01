@@ -66,7 +66,7 @@ const dashboardSections = [
         titulo: "Galería de Imágenes",
         descripcion: "Gestiona y actualiza la galería de imágenes en la sección Galería para captar la atención de tus clientes . Añade fotos llamativas y de alta calidad con descripciones que transmitan emociones y reflejen la esencia de tu marca.",
         icono: <TfiGallery className="text-5xl text-[#D91656]" />,
-        url: "/dashboard/blog",
+        url: "/dashboard/galleryImages",
         habilitado: true,
 
     },
@@ -83,7 +83,7 @@ const dashboardSections = [
         titulo: "Blog",
         descripcion: "Crea y gestiona artículos que destacan en la página principal. Publica contenido relevante y optimizado para mejorar el posicionamiento SEO y atraer más visitantes mediante búsquedas y palabras clave estratégicas.",
         icono: <FaBox className="text-5xl text-[#17494d]" />,
-        url: "/dashboard/galleryImages",
+        url: "/dashboard/blog",
         habilitado: true,
 
     },

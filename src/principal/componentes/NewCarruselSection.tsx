@@ -13,7 +13,7 @@ import {
 import Image from "next/image";
 import ListCarruselSections from "./ListCarruselSections";
 import { createCarruselSection, uploadCarruselImage } from "../actions/carruselPrincipalActions";
-
+import { InfoEmpresa as empresa } from "@/config/config";
 
 // Interfaz para el formulario
 interface NewCarruselSectionForm {
@@ -68,7 +68,7 @@ const NewCarruselSection: React.FC<NewCarruselSectionProps> = ({
     try {
       const imageUrl =
         (await uploadCarruselImage(data.imagen[0])) ||
-        "/imgs/image_not_found.webp";
+        empresa.imagenesPlaceholder.notfound;
 
       // Crear nueva sección con la imagen
       const newSection = await createCarruselSection({

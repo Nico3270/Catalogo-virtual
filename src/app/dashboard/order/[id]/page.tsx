@@ -1,4 +1,5 @@
-import { RubikFont } from "@/config/fonts";
+
+import { titulosPrincipales } from "@/config/fonts";
 import { getOrderById } from "@/order/actions/getOrderById";
 import { ShowInformationOrder } from "@/order/componentes/ShowInformationOrder";
 export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
@@ -36,7 +37,7 @@ export default async function OrderPage({ params }: Props) {
   return (
     <div className="container mx-auto p-4">
       <h1
-        className={`text-3xl font-bold text-center mb-2 mt-2 ${RubikFont.className} text-[#D91656]`}
+        className={`text-3xl font-bold text-center mb-2 mt-2 ${titulosPrincipales.className} text-[#D91656]`}
       >
         Detalle de la Orden
       </h1>

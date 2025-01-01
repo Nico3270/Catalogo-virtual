@@ -1,6 +1,7 @@
 // import { FaShoppingCart } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
+import { InfoEmpresa as empresa } from "@/config/config";
 
 
 export default function EmptyPage() {
@@ -11,7 +12,7 @@ export default function EmptyPage() {
       
       {/* Imagen del carrito vacío */}
       <Image
-        src="/imgs/empty_cart.webp" // Ruta de la imagen generada
+        src= {empresa.imagenesPlaceholder.imagenCarroVacio} // Ruta de la imagen generada
         alt="Carrito de compras vacío"
         width={300}
         height={300}

@@ -21,7 +21,8 @@ import { updateVideosOrder } from "@/galeria/actions/updateVideosOrder";
 import { uploadVideoToCloudinary } from "../actions/uploadVideoToCloudinary";
 import { SortableRow } from "./SortableRow";
 import { FiMove, FiEdit } from "react-icons/fi";
-import { RubikFont } from "@/config/fonts";
+import { titulosPrincipales } from "@/config/fonts";
+
 
 interface ShowGalleryVideosProps {
   initialVideos: VideoGalleryItem[];
@@ -121,7 +122,7 @@ const ShowGalleryVideos: React.FC<ShowGalleryVideosProps> = ({ initialVideos }) 
 
   return (
     <div className="w-full bg-white rounded-lg shadow-md p-6">
-      <h1 className={`text-2xl font-bold mb-4 text-center text-[#D91656] ${RubikFont.className}`}>
+      <h1 className={`text-2xl font-bold mb-4 text-center color-titulo-tarjeta ${titulosPrincipales.className}`}>
         Administración de videos de la galería
       </h1>
 

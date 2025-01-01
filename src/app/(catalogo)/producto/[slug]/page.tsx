@@ -4,6 +4,10 @@ import { ProductGridProduct } from "@/producto/components/ProductGridProduct";
 import { ResponsiveSlideShow } from "@/producto/components/ResonsiveSlideShow";
 import { AddToCart } from "@/producto/components/AddToCart";
 import { getProductBySlug } from "@/producto/actions/getProductBySlug";
+import { SeccionesFont } from "@/config/fonts";
+import Head from "next/head";  // Importar Head para insertar el JSON-LD
+
+
 export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 interface Props {
   params: Promise<{
@@ -57,8 +61,39 @@ export default async function ProductPage({ params }: Props) {
     notFound();
   }
 
+  // Generar JSON-LD dinámico para el producto
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.nombre,
+    "description": product.descripcion || "",
+    "image": product.imagenes,
+    "brand": {
+      "@type": "Brand",
+      "name": "Detalles, Sorpresas y Regalos"
+    },
+    "sku": product.id,
+    "offers": {
+      "@type": "Offer",
+      "url": `https://catalogo-virtual.vercel.app/producto/${product.slug}`,
+      "priceCurrency": "COP",
+      "price": product.precio,
+    }
+  };
+
+
   return (
     <div className="container mx-auto p-4">
+
+      {/* Incrustar el JSON-LD en el head */}
+      <Head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd),
+          }}
+        />
+      </Head>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Carrusel de imágenes */}
         <div className="relative w-full h-[400px] md:h-[500px]">
@@ -73,7 +108,7 @@ export default async function ProductPage({ params }: Props) {
 
       {/* Productos similares */}
       <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-4">Productos Similares</h2>
+        <h2 className={`text-2xl font-bold mb-4 ${SeccionesFont.className} color-secundario`}>Productos Similares</h2>
         <ProductGridProduct products={similarProducts} />
       </div>
     </div>

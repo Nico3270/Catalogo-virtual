@@ -14,7 +14,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { FaUpload } from "react-icons/fa";
-
+import { InfoEmpresa as empresa } from "@/config/config";
 // Props del componente
 interface ModifyTarjetImageProps {
   tarjetId: string;
@@ -75,7 +75,7 @@ const ModifyTarjetImage: React.FC<ModifyTarjetImageProps> = ({
     <div className="flex flex-col items-center gap-4">
       <div className="relative w-40 h-40 rounded-lg overflow-hidden border-2 border-gray-300">
         <Image
-          src={previewImage || "/imgs/image_not_found.webp"}
+          src={previewImage || empresa.imagenesPlaceholder.notfound}
           alt="Tarjeta"
           fill
           className="object-cover"

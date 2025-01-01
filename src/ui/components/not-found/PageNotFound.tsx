@@ -2,7 +2,7 @@ import { tituloLogo } from '@/config/fonts';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
-
+import { InfoEmpresa as empresa } from "@/config/config";
 export const PageNotFound = () => {
   return (
     <div className='flex flex-col-reverse md:flex-row h-[600px] w-full justify-center items-center align-top'>
@@ -21,7 +21,7 @@ export const PageNotFound = () => {
         </div>
         <div className='px-5 mx-5 '>
             <Image 
-            src="/imgs/not_found.webp"
+            src={empresa.imagenesPlaceholder.notfound}
             alt='Starman'
             className='p-5 sm:p-0 rounded-lg'
             width={550}

@@ -1,6 +1,6 @@
 "use client";
 
-import { DeliusFont, OldenburgFont, RubikFont } from "@/config/fonts";
+import { DeliusFont, OldenburgFont,  titulosPrincipales } from "@/config/fonts";
 import Image from "next/image";
 import React from "react";
 
@@ -21,7 +21,7 @@ const QuienesSomos: React.FC<Props> = ({ tarjetas }) => {
     <section className="w-full bg-gradient-to-b from-[#eef2f3] to-[#d9e6ea] py-6 px-6">
       {/* Encabezado */}
       <div className="text-center mb-8">
-        <h2 className={`text-4xl font-extrabold text-[#D91656] ${RubikFont.className}`}>
+        <h2 className={`text-4xl font-extrabold color-titulos ${titulosPrincipales.className}`}>
           Conoce Nuestra Historia
         </h2>
       </div>
@@ -44,12 +44,12 @@ const QuienesSomos: React.FC<Props> = ({ tarjetas }) => {
             </div>
 
             {/* Título */}
-            <h3 className={`text-xl font-bold text-[#640D5F] ${DeliusFont.className}`}>
+            <h3 className={`text-xl font-bold color-titulo-tarjeta ${DeliusFont.className}`}>
               {tarjeta.titulo}
             </h3>
 
             {/* Descripción */}
-            <p className={`text-sm font-bold text-gray-600 mt-2 ${OldenburgFont.className}`}>
+            <p className={`text-sm font-bold color-descripcion-tarjeta mt-2 ${OldenburgFont.className}`}>
               {tarjeta.descripcion}
             </p>
           </div>

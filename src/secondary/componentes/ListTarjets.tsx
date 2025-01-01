@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaEdit } from "react-icons/fa";
-
+import { InfoEmpresa as empresa } from "@/config/config";
 // Interfaz para las tarjetas
 export interface Tarjet {
   id: string;
@@ -39,7 +39,7 @@ const ListTarjets: React.FC<ListTarjetsProps> = ({ tarjetas }) => {
               <td className="p-3">
                 <div className="w-20 h-20 relative rounded-md overflow-hidden border border-gray-300">
                   <Image
-                    src={tarjeta.imagen || "/imgs/image_not_found.webp"}
+                    src={tarjeta.imagen || empresa.imagenesPlaceholder.notfound}
                     alt={tarjeta.titulo}
                     layout="fill"
                     objectFit="cover"

@@ -16,7 +16,7 @@ import {
   createTarjet,
 } from "../actions/quienesSomos";
 import ListTarjets from "./ListTarjets";  // 👈 Importa ListTarjets
-
+import { InfoEmpresa as empresa } from "@/config/config";
 // Interfaz para el formulario
 interface NewTarjetForm {
   titulo: string;
@@ -65,7 +65,7 @@ const NewTarjet: React.FC<NewTarjetProps> = ({ initialTarjets }) => {
   
     setLoading(true);
     try {
-      const imageUrl = await uploadTarjetImage(data.imagen[0]) || "/imgs/image_not_found.webp";
+      const imageUrl = await uploadTarjetImage(data.imagen[0]) || empresa.imagenesPlaceholder.notfound;
   
       // Crear tarjeta con imagen válida o imagen por defecto
       const newTarjet = await createTarjet({

@@ -5,7 +5,7 @@ import { TopMenu, TopMenuMobile } from "@/ui";
 import React, { useState, useEffect } from "react";
 
 
-export default function RestaurantLayout({
+export default function CatalogoLayout({
   children,
 }: {
   children: React.ReactNode;

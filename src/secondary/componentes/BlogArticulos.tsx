@@ -1,6 +1,6 @@
 "use client";
 
-import { LatoFont, RubikFont, Sour_Gummy_Font } from "@/config/fonts";
+import { LatoFont,  SeccionesFont,  titleFont, titulosPrincipales } from "@/config/fonts";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -40,10 +40,10 @@ const BlogArticulos: React.FC<Props> = ({ articulos }) => {
     <section className="w-full bg-gradient-to-b from-[#eef2f3] to-[#d9e6ea] py-4 px-6 pb-0">
       {/* Encabezado */}
       <div className="text-center mb-4">
-        <h2 className={`text-4xl font-extrabold text-[#D91656] ${RubikFont.className}`}>
-          Explora Nuestros Artículos
+        <h2 className={`text-4xl font-extrabold color-titulos ${titulosPrincipales.className}`}>
+          Explora Nuestros Blogs
         </h2>
-        <p className="text-gray-700 text-lg mt-2">
+        <p className={` text-lg mt-2 ${titleFont.className} color-descripcion-tarjeta`}>
           Consejos, ideas y tendencias sobre regalos personalizados y detalles
           únicos.
         </p>
@@ -69,14 +69,14 @@ const BlogArticulos: React.FC<Props> = ({ articulos }) => {
               </div>
 
               {/* Título */}
-              <h3 className={`text-lg font-bold text-[#D91656] mb-2 ${Sour_Gummy_Font.className}`}>
+              <h3 className={`text-lg font-bold color-titulo-tarjeta mb-2 ${SeccionesFont.className}`}>
                 {articulo.titulo}
               </h3>
 
               {/* Descripción truncada */}
-              <p className={`text-md text-[#640D5F] mb-4 ${LatoFont.className}`}>
+              <p className={`text-md color-descripcion-tarjeta mb-4 ${LatoFont.className}`}>
                 {truncateText(articulo.descripcion, 100)}{" "}
-                <span className="text-[#D91656] font-semibold hover:underline">
+                <span className="color-titulo-tarjeta font-semibold hover:underline">
                   Ver más
                 </span>
               </p>

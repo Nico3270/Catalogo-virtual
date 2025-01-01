@@ -12,19 +12,11 @@ import {
 import Image from "next/image";
 import { MenuSectionsBar } from "../menu-section-bar/MenuSectionBar";
 import { SideBar } from "../side-bar/SideBar";
-import {
-  App_Nombre1,
-  App_Nombre2,
-  Color_Circulo_Numero_Iconos_Mobile,
-  Color_Letras_Logo,
-  enlacePrincipalInferior,
-  EnlacesNavegacionTopMenu,
-  Ruta_Logo,
-  Width_Height_Logo_TopMenuMobile,
-} from "@/config/config";
-import { Sour_Gummy_Font } from "@/config/fonts";
+import { LogoFont } from "@/config/fonts";
 import { useCartCatalogoStore } from "@/store/carro/carro-store";
 import { useFavoritesCatalogoStore } from "@/store/favoritos/favoritos-store";
+import { TopMenuConfig as tp } from "@/config/config";
+import { InfoEmpresa as empresa } from "@/config/config";
 
 export const TopMenuMobile = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -42,26 +34,26 @@ export const TopMenuMobile = () => {
     <div>
       {/* Barra superior fija para pantallas pequeñas */}
       <header
-        className={`bg-[#f8edeb] text-[${Color_Letras_Logo}] ${Sour_Gummy_Font.className} py-2 shadow-lg fixed top-0 w-full z-50`}
+        className={`color-fondo-principal color-logos ${LogoFont.className} py-2 shadow-lg fixed top-0 w-full z-50`}
       >
         <div className="container mx-auto flex justify-between items-center px-4">
           {/* Logo y nombre del restaurante a la izquierda */}
           <div className="flex items-center">
             <Link href="/">
               <Image
-                src={Ruta_Logo}
-                alt="Logo"
-                width={Width_Height_Logo_TopMenuMobile}
-                height={Width_Height_Logo_TopMenuMobile}
+                src={empresa.imagenesPlaceholder.logoEmpresa}
+                alt={`Logo ${empresa.titulo}`}
+                width={tp.width_height_logo_topMenuMobile}
+                height={tp.height_height_logo_topMenuMobile}
               />
             </Link>
             <div className="ml-2 text-left">
               <Link href="/">
                 <span className={`block text-md font-bold leading-tight`}>
-                  {App_Nombre1}
+                  {empresa.nombreCorto.parte1}
                 </span>
                 <span className={`block text-md font-bold leading-tight`}>
-                  {App_Nombre2}
+                  {empresa.nombreCorto.parte2}
                 </span>
               </Link>
             </div>
@@ -77,11 +69,11 @@ export const TopMenuMobile = () => {
         {menuOpen && (
           <div className="absolute top-12 left-0 w-full bg-white shadow-lg z-20 py-4">
             <nav className="space-y-4 flex flex-col items-center">
-              {EnlacesNavegacionTopMenu.map((item) => (
+              {tp.EnlacesNavegacionTopMenu.map((item) => (
                 <Link
                   href={`${item.ruta}`}
                   key={item.section}
-                  className="hover:text-red-700"
+                  className="links"
                 >
                   {item.section}
                 </Link>
@@ -105,11 +97,11 @@ export const TopMenuMobile = () => {
       <nav className="bg-white fixed bottom-0 w-full z-50 border-t shadow-lg">
         <div className="flex justify-around items-center py-2">
           <Link
-            href={enlacePrincipalInferior.ruta}
+            href={tp.enlacePrincipalInferior.ruta}
             className="flex flex-col items-center"
           >
             <FaGifts className="text-xl" />
-            <span className="text-xs">{enlacePrincipalInferior.nombre}</span>
+            <span className="text-xs">{tp.enlacePrincipalInferior.nombre}</span>
           </Link>
 
           {/* Botón de favoritos */}
@@ -120,7 +112,7 @@ export const TopMenuMobile = () => {
             <FaHeart className="text-xl" />
             {totalFavorites > 0 && (
               <span
-                className={`absolute top-0 right-0 ${Color_Circulo_Numero_Iconos_Mobile} rounded-full text-xs w-4 h-4 flex items-center justify-center transform translate-x-1/4 -translate-y-1/2`}
+                className={`absolute top-0 right-0 ${tp.Color_Circulo_Numero_Iconos_Mobile} rounded-full text-xs w-4 h-4 flex items-center justify-center transform translate-x-1/4 -translate-y-1/2`}
               >
                 {totalFavorites}
               </span>
@@ -136,7 +128,7 @@ export const TopMenuMobile = () => {
             <FaShoppingCart className="text-xl" />
             {totalItemsInCart > 0 && (
               <span
-                className={`absolute top-0 right-0 ${Color_Circulo_Numero_Iconos_Mobile} rounded-full text-xs w-4 h-4 flex items-center justify-center transform translate-x-1/4 -translate-y-1/2`}
+                className={`absolute top-0 right-0 ${tp.Color_Circulo_Numero_Iconos_Mobile} rounded-full text-xs w-4 h-4 flex items-center justify-center transform translate-x-1/4 -translate-y-1/2`}
               >
                 {totalItemsInCart}
               </span>

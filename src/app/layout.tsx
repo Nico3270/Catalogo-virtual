@@ -2,27 +2,26 @@ import type { Metadata } from "next";
 import { inter } from "@/config/fonts";
 import "./globals.css";
 import { Provider } from "@/providers/Provider";
+import { InfoEmpresa as empresa } from "@/config/config";
 
 
 export const metadata: Metadata = {
-  title: "Catalogo virtual",
-  description:
-    "Disfruta de la mejor experiencia gastronómica en Restaurante Macedonia. Menús variados con opciones de cocina tradicional y gourmet. ¡Reserva ahora!",
-  keywords:
-    "Restaurante, Parrilla Internacional, comida gourmet, cocina tradicional, mejores restaurantes, reservas online, menú, delivery",
+  metadataBase: new URL(empresa.linkWebProduccion),
+  title: empresa.titulo,
+  description: `${empresa.nombreCompleto} ${empresa.descripcion}`,
+  keywords: empresa.keywords,
   robots: "index, follow",
   openGraph: {
-    title: "Catalogo virtual",
-    description:
-      "Descubre la mejor cocina en Restaurante Macedonia. Menús para todos los gustos y servicios de entrega rápida.",
+    title: empresa.titulo,
+    description: `${empresa.nombreCompleto} ${empresa.descripcion}`,
     type: "website",
-    url: "https://www.parrilla-internacional.com", // Reemplaza con la URL de tu restaurante
+    url: empresa.website,
     images: [
       {
-        url: "https://www.parrilla-internacional/imagen.png", // Imagen representativa
+        url: empresa.imagenesPlaceholder.imagenRepresentativa,
         width: 800,
         height: 600,
-        alt: "Restaurante Macedonia",
+        alt: empresa.descripcion
       },
     ],
   },
@@ -39,6 +38,31 @@ export default function RootLayout({
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="theme-color" content="#ffffff" />
+
+        {/* JSON-LD para SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": empresa.nombreCompleto,
+              "url": empresa.website,
+              "logo": empresa.imagenesPlaceholder.imagenRepresentativa,
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": empresa.telefono,
+                "contactType": "customer service",
+                "email": empresa.email,
+              },
+              "sameAs": [
+                empresa.urlInstagram,
+                empresa.urlFacebook,
+                empresa.urlTiktok
+              ].filter(url => url) // Filtra URLs vacías
+            }),
+          }}
+        />
       </head>
       <body className={`${inter.className} bg-[#f8edeb]`}>
         <Provider>{children}</Provider>

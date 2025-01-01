@@ -1,13 +1,14 @@
 "use client";
 
-import { RubikFont } from "@/config/fonts";
+import {  titleFont, titulosPrincipales } from "@/config/fonts";
 import React from "react";
 import { FaWhatsapp, FaFacebookF, FaInstagram, FaTiktok } from "react-icons/fa";
+import { InfoEmpresa as empresa } from "@/config/config";
 
 const RedesSocialesContact: React.FC = () => {
-  const direccion = "Carrera 9A # 7-03 Sur, Tunja"; // Cambia esto por tu dirección
-  const googleMapsIframeSrc =
-    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3971.394594074716!2d-73.37225322535299!3d5.508293434128291!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e6a7de1c1eac06f%3A0xcbfdc6875cf68173!2sCra.%209A%20%237-14%2C%20Tunja%2C%20Boyac%C3%A1!5e0!3m2!1sen!2sco!4v1732853148670!5m2!1sen!2sco";
+  const direccion = empresa.direccion; // Cambia esto por tu dirección
+  const googleMapsIframeSrc = empresa.iframeGoogleMaps;
+    
 
   return (
     <section
@@ -16,7 +17,7 @@ const RedesSocialesContact: React.FC = () => {
     >
       {/* Título */}
       <div className="text-center mb-4">
-        <h2 className={`text-4xl font-extrabold text-[#D91656] ${RubikFont.className}`}>
+        <h2 className={`text-4xl font-extrabold color-titulos  ${titulosPrincipales.className}`}>
           Encuéntranos en
         </h2>
       </div>
@@ -24,7 +25,7 @@ const RedesSocialesContact: React.FC = () => {
       {/* Iconos de redes sociales */}
       <div className="flex justify-center gap-6 mb-2" aria-label="Síguenos en redes sociales">
         <a
-          href="https://wa.me/1234567890"
+          href={`https://wa.me/${empresa.telefono}`}
           target="_blank"
           rel="noopener noreferrer"
           title="Contáctanos por WhatsApp"
@@ -33,7 +34,7 @@ const RedesSocialesContact: React.FC = () => {
           <FaWhatsapp className="text-3xl" />
         </a>
         <a
-          href="https://facebook.com/tu-pagina"
+          href={empresa.urlFacebook}
           target="_blank"
           rel="noopener noreferrer"
           title="Visita nuestra página de Facebook"
@@ -42,7 +43,7 @@ const RedesSocialesContact: React.FC = () => {
           <FaFacebookF className="text-3xl" />
         </a>
         <a
-          href="https://instagram.com/tu-perfil"
+          href={empresa.urlInstagram}
           target="_blank"
           rel="noopener noreferrer"
           title="Síguenos en Instagram"
@@ -51,7 +52,7 @@ const RedesSocialesContact: React.FC = () => {
           <FaInstagram className="text-3xl" />
         </a>
         <a
-          href="https://tiktok.com/@tu-usuario"
+          href={empresa.urlTiktok}
           target="_blank"
           rel="noopener noreferrer"
           title="Encuéntranos en TikTok"
@@ -63,7 +64,7 @@ const RedesSocialesContact: React.FC = () => {
 
       {/* Dirección y Google Maps */}
       <div className="flex flex-col items-center gap-1  w-full" aria-label="Nuestra ubicación">
-        <p className="text-lg text-[#2d3748] font-medium">{direccion}</p>
+        <p className={`text-xl text-[#2d3748] font-mbold ${titleFont.className} pb-2`}>{direccion}</p>
         {/* Mapa embebido */}
         <iframe
           src={googleMapsIframeSrc}

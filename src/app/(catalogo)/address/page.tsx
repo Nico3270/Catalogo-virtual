@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 
 import { AddressForm } from "@/address/componentes/AddressForm";
 import Image from "next/image";
-
+import { InfoEmpresa as empresa } from "@/config/config";
 export default function AddressPage() {
   return (
     <div className="container mx-auto py-8">
@@ -11,7 +11,7 @@ export default function AddressPage() {
         {/* Imagen grande para pantallas grandes */}
         <div className="hidden lg:block">
           <Image
-            src="/imgs/domicilio.webp" // Cambia esto por el path de la imagen generada
+            src= {empresa.imagenesPlaceholder.domicilio}// Cambia esto por el path de la imagen generada
             alt="Entrega a domicilio"
             width={800}
             height={600}

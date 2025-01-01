@@ -2,13 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { InfoEmpresa as empresa } from "@/config/config";
 export const dynamic = "force-dynamic"; // Asegura que la acción no use caché
 export default function NotAuthorizedPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 text-gray-800 px-6">
       <div className="max-w-md text-center">
         <Image
-          src="/imgs/no_autorizado.webp"
+          src={empresa.imagenesPlaceholder.noAutorizado}
           alt="Not Authorized Illustration"
           width={400}
           height={400}
