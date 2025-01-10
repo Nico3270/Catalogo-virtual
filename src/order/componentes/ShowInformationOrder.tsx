@@ -3,6 +3,7 @@
 import React from "react";
 import { FaCheckCircle, FaDollarSign, FaTimesCircle, FaBoxOpen, FaTools } from "react-icons/fa";
 import { Order, StatusHistory } from "@/order/interfaces/types";
+import Link from "next/link";
 
 interface ShowInformationOrderProps {
     order: Order;
@@ -85,12 +86,12 @@ export const ShowInformationOrder: React.FC<ShowInformationOrderProps> = ({ orde
                 <p className="mt-4 font-bold">
                     Total: <span className="text-lg">${totalPrice.toFixed(2)}</span>
                 </p>
-                <a
+                <Link
                     href={`/dashboard/updateOrder/${order.id}`}
                     className="block mt-6 bg-[#CA7373] text-white text-center py-2 rounded-lg hover:bg-blue-600"
                 >
                     Modificar Orden
-                </a>
+                </Link>
             </div>
 
             {/* Historial de la orden */}

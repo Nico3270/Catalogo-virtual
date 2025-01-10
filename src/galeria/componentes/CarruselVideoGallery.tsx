@@ -16,11 +16,7 @@ interface CarruselVideoGalleryProps {
 
 const CarruselVideoGallery: React.FC<CarruselVideoGalleryProps> = ({ videos }) => {
   const videoRefs = useRef<HTMLVideoElement[]>([]);
-  const [aspectRatios, setAspectRatios] = useState<string[]>(
-    videos.map(() => "16/9") // Por defecto, asumimos formato horizontal 16:9
-  );
 
-  // Manejar el cambio de slide
   const handleSlideChange = (swiper: SwiperCore) => {
     videoRefs.current.forEach((video, index) => {
       if (video) {
@@ -34,22 +30,12 @@ const CarruselVideoGallery: React.FC<CarruselVideoGalleryProps> = ({ videos }) =
     });
   };
 
-  // Detectar la relación de aspecto del video local
-  const handleLoadedMetadata = (index: number, video: HTMLVideoElement) => {
-    const aspectRatio = video.videoWidth / video.videoHeight;
-    setAspectRatios((prev) => {
-      const updatedRatios = [...prev];
-      updatedRatios[index] = aspectRatio >= 1 ? "16/9" : "9/16"; // Horizontal o Vertical
-      return updatedRatios;
-    });
-  };
-
   return (
     <section
       className="w-full bg-gradient-to-b from-gray-50 to-white py-6 flex justify-center"
       aria-label="Carrusel de videos"
     >
-      <div className="w-full max-w-[600px]">
+      <div className="w-full max-w-[400px]"> {/* Ajuste para pantallas tipo móvil */}
         <Swiper
           spaceBetween={20}
           slidesPerView={1}
@@ -57,7 +43,7 @@ const CarruselVideoGallery: React.FC<CarruselVideoGalleryProps> = ({ videos }) =
           pagination={{ clickable: true }}
           loop
           modules={[Pagination, Navigation, Autoplay]}
-          onSlideChange={handleSlideChange} // Callback al cambiar de slide
+          onSlideChange={handleSlideChange}
           className="video-swiper"
         >
           {videos.map((video, index) => {
@@ -67,9 +53,10 @@ const CarruselVideoGallery: React.FC<CarruselVideoGalleryProps> = ({ videos }) =
               <SwiperSlide key={video.id} className="relative flex flex-col items-center">
                 {/* Contenedor del video */}
                 <div
-                  className="relative rounded-lg overflow-hidden shadow-lg"
+                  className="relative rounded-lg overflow-hidden shadow-lg bg-black"
                   style={{
-                    aspectRatio: aspectRatios[index], // Aplicar la relación de aspecto dinámica
+                    aspectRatio: "9 / 16", // Relación de aspecto fija para videos verticales
+                    width: "100%",
                   }}
                 >
                   {isYouTube ? (
@@ -85,22 +72,21 @@ const CarruselVideoGallery: React.FC<CarruselVideoGalleryProps> = ({ videos }) =
                       ref={(el) => {
                         if (el) {
                           videoRefs.current[index] = el;
-                          el.onloadedmetadata = () => handleLoadedMetadata(index, el);
                         }
-                      }} // Guarda la referencia del video y calcula la relación de aspecto
+                      }}
                       src={video.url}
                       muted
                       loop
                       playsInline
                       controls
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover" // Ajusta el video para cubrir el contenedor
                     ></video>
                   )}
                 </div>
 
                 {/* Caja con título y descripción debajo del video */}
                 <div className="mt-4 w-full p-4 sm:p-6 bg-white rounded-lg shadow-md">
-                  <h3 className={`text-lg md:text-2xl font-bold color-titulo-tarjeta text-center ${SeccionesFont.className} `}>
+                  <h3 className={`text-lg md:text-2xl font-bold color-titulo-tarjeta text-center ${SeccionesFont.className}`}>
                     {video.title}
                   </h3>
                   <p className={`text-sm md:text-base color-descripcion-tarjeta mt-2 text-center ${titleFont.className}`}>

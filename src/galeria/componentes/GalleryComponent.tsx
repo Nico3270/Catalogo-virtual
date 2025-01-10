@@ -5,7 +5,8 @@ import Image from "next/image";
 import clsx from "clsx";
 import { ImageGalleryItem, VideoGalleryItem } from "../interfaces/types";
 import CarruselVideoGallery from "./CarruselVideoGallery";
-import { LatoFont,  SeccionesFont,  titleFont, titulosPrincipales } from "@/config/fonts";
+import {  merriWeatherFont,  SeccionesFont,  titleFont, titulosPrincipales } from "@/config/fonts";
+import { InfoEmpresa } from "@/config/config";
 
 interface GalleryComponentProps {
   videos: VideoGalleryItem[];
@@ -33,7 +34,7 @@ const GalleryComponent: React.FC<GalleryComponentProps> = ({ videos, images }) =
           Galería de Inspiración
         </h1>
         <p className={`text-lg color-descripcion-tarjeta ${titleFont.className}`}>
-          Descubre nuestras sorpresas, detalles y regalos únicos para cada ocasión especial.
+          {`Momentos destacados en ${InfoEmpresa.nombreCompleto}`}
         </p>
       </header>
 
@@ -50,8 +51,8 @@ const GalleryComponent: React.FC<GalleryComponentProps> = ({ videos, images }) =
         >
           Imágenes inspiradoras
         </h1>
-        <p className={`text-lg color-descripcion-tarjeta ${titleFont.className}`}>
-          Descubre nuestras sorpresas, detalles y regalos únicos para cada ocasión especial.
+        <p className={`text-lg mb-4 color-descripcion-tarjeta ${titleFont.className}`}>
+          {`Momentos destacados en ${InfoEmpresa.nombreCompleto}`}
         </p>
         <div
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
@@ -97,7 +98,7 @@ const GalleryComponent: React.FC<GalleryComponentProps> = ({ videos, images }) =
           >
             {/* Botón de cierre */}
             <button
-              className="absolute top-4 right-4 text-gray-200 bg-[#640D5F] hover:bg-[#D91656] p-3 rounded-full cursor-pointer z-70"
+              className="absolute top-4 right-4 text-gray-200 color-boton-descripcion p-3 rounded-full cursor-pointer z-70"
               style={{ zIndex: 70 }} // Forzamos un z-index alto
               onClick={(e) => {
                 e.stopPropagation();
@@ -115,10 +116,10 @@ const GalleryComponent: React.FC<GalleryComponentProps> = ({ videos, images }) =
               />
             </div>
             <div className="mt-4 text-center">
-              <h3 className={`text-2xl font-bold text-[#D91656] ${SeccionesFont.className}`}>
+              <h3 className={`text-2xl font-bold color-titulo-tarjeta ${SeccionesFont.className}`}>
                 {selectedImage.title}
               </h3>
-              <p className={`text-[#640D5F] mt-2 ${LatoFont.className} text-lg`}>
+              <p className={`color-descripcion-tarjeta mt-2 ${merriWeatherFont.className} text-lg`}>
                 {selectedImage.description}
               </p>
             </div>

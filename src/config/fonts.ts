@@ -35,7 +35,10 @@ export const FunelSansFont = Funnel_Sans({subsets:["latin"], weight: ["400"]})
 export const RobotoFont = Roboto({subsets:["latin"], weight: ["400"]})
 export const LatoFont = Lato({subsets:["latin"], weight: ["400"]})
 
-
+export const merriWeatherFont = Merriweather({
+    subsets: ['latin'],
+    weight: ["300"],
+})
 // Fuentes personalizadas
 
 export const SeccionesFont = Sour_Gummy({subsets:["latin"], weight: ["700"]}); // Secciones del TopMenu o barra de navegación principal
