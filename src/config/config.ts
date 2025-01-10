@@ -10,7 +10,7 @@ export const InfoEmpresa = {
   iframeGoogleMaps : "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3971.394594074716!2d-73.37225322535299!3d5.508293434128291!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e6a7de1c1eac06f%3A0xcbfdc6875cf68173!2sCra.%209A%20%237-14%2C%20Tunja%2C%20Boyac%C3%A1!5e0!3m2!1sen!2sco!4v1732853148670!5m2!1sen!2sco",
   nombreCorto: {
     parte1: "Detalles",
-    parte2: "Sorpresas y Regalos"
+    parte2: "Regalos"
   },
   telefono:"3182293083",
   email: "contacto@detallesysorpresas.com", 
